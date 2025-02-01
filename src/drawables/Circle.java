@@ -1,76 +1,73 @@
 package drawables;
 
-import animations.Animation;
 import java.awt.Graphics;
 
-public class Rect extends Drawable {
+import animations.Animation;
+
+public class Circle extends Drawable {
     private int x;
     private int y;
-    private int width;
-    private int height;
+    private int radius;
 
-    public Rect(int x, int y, int width, int height) {
+    public Circle(int x, int y, int radius) {
         super();
 
         this.x = x;
         this.y = y;
-        this.width = width;
-        this.height = height;
+        this.radius = radius;
     }
 
     @Override
     public void paint(Graphics g) {
-        g.drawRect(x - (width / 2), y - (height / 2), width, height);
+        g.drawOval(x - radius, y - radius, radius * 2, radius * 2);
     }
 
     @Override
     public String toString() {
-        return "Rect";
+        return "Circle";
     }
 
     public Animation moveTo(int x, int y, int duration) {
         return new Animation() {
             @Override
             public String toString() {
-                return "Rect - MoveTo";
+                return "Circle - MoveTo";
             };
             @Override
             public void generate() {
-                int startX = Rect.this.x;
-                int startY = Rect.this.y;
+                int startX = Circle.this.x;
+                int startY = Circle.this.y;
 
                 for (int i = 0; i <= duration; i++) {
                     int frameX = startX + (x - startX) * i / duration;
                     int frameY = startY + (y - startY) * i / duration;
                     this.addFrame(() -> {
-                        Rect.this.x = frameX;
-                        Rect.this.y = frameY;
+                        Circle.this.x = frameX;
+                        Circle.this.y = frameY;
                     });
                 }
             }
         };
     }
 
-    public Animation scaleTo(int w, int h, int duration) {
+    public Animation scaleTo(int r, int duration) {
         return new Animation() {
             @Override 
             public String toString() {
-                return "Rect - ScaleTo";
+                return "Circle - ScaleTo";
             };
             @Override
             public void generate() {
-                int startW = Rect.this.width;
-                int startH = Rect.this.height;
+                int startR = Circle.this.radius;
 
                 for (int i = 0; i <= duration; i++) {
-                    int frameW = startW + (w - startW) * i / duration;
-                    int frameH = startH + (h - startH) * i / duration;
+                    int frameR = startR + (r - startR) * i / duration;
                     this.addFrame(() -> {
-                        Rect.this.width = frameW;
-                        Rect.this.height = frameH;
+                        Circle.this.radius = frameR;
                     });
                 }
-            };
+            }
         };
     }
+
 }
