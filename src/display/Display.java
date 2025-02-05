@@ -6,6 +6,7 @@ import java.awt.event.WindowEvent;
 
 public class Display extends Frame {
     private final AnimationScreen gameScreen;
+    private final Camera camera;
     private int width = 800;
     private int height = 600;
     private boolean visible = false;
@@ -13,6 +14,8 @@ public class Display extends Frame {
 
     public Display() {
         super();
+
+        this.camera = new Camera(10, 10, 10, 0, 0, 0, 60.0f, 800.0f / 600.0f, 0.1f, 1000.0f);
         
         addWindowListener(new WindowAdapter() {
             @Override
@@ -27,6 +30,10 @@ public class Display extends Frame {
         add(gameScreen);
         pack();
         
+    }
+
+    public Camera getCamera() {
+        return camera;
     }
 
     public void config(Boolean visible, Integer width, Integer height, String title) {
