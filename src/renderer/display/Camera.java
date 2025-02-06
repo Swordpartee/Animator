@@ -1,7 +1,5 @@
 package renderer.display;
 
-import animations.Animation;
-
 public class Camera {
     private final float[][] viewMatrix = new float[4][4];
     private final float[][] projectionMatrix = new float[4][4];
@@ -25,6 +23,14 @@ public class Camera {
         this.far = far;
     }
 
+    public float[] getPosition() {
+        return position;
+    }
+
+    public float[] getTarget() {
+        return target;
+    }
+
     public void move(float dx, float dy, float dz) {
         this.position[0] += dx;
         this.position[1] += dy;
@@ -35,60 +41,6 @@ public class Camera {
         this.target[0] += dx;
         this.target[1] += dy;
         this.target[2] += dz;
-    }
-
-    public Animation moveTargetTo(float x, float y, float z, int duration) {
-        return new Animation() {
-            @Override
-            public String toString() {
-                return "Camera - MoveTargetTo";
-            };
-
-            @Override
-            public void generate() {
-                float startX = Camera.this.target[0];
-                float startY = Camera.this.target[1];
-                float startZ = Camera.this.target[2];
-
-                for (int i = 0; i <= duration; i++) {
-                    float frameX = startX + (x - startX) * i / duration;
-                    float frameY = startY + (y - startY) * i / duration;
-                    float frameZ = startZ + (z - startZ) * i / duration;
-                    this.addFrame(() -> {
-                        Camera.this.target[0] = frameX;
-                        Camera.this.target[1] = frameY;
-                        Camera.this.target[2] = frameZ;
-                    });
-                }
-            }
-        };
-    }
-
-    public Animation moveTo(float x, float y, float z, int duration) {
-        return new Animation() {
-            @Override
-            public String toString() {
-                return "Camera - MoveTo";
-            };
-
-            @Override
-            public void generate() {
-                float startX = Camera.this.position[0];
-                float startY = Camera.this.position[1];
-                float startZ = Camera.this.position[2];
-
-                for (int i = 0; i <= duration; i++) {
-                    float frameX = startX + (x - startX) * i / duration;
-                    float frameY = startY + (y - startY) * i / duration;
-                    float frameZ = startZ + (z - startZ) * i / duration;
-                    this.addFrame(() -> {
-                        Camera.this.position[0] = frameX;
-                        Camera.this.position[1] = frameY;
-                        Camera.this.position[2] = frameZ;
-                    });
-                }
-            }
-        };
     }
 
     public float[] applyViewTransformation(float[] coords) {

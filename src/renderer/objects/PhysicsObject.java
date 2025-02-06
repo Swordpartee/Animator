@@ -2,7 +2,7 @@ package renderer.objects;
 
 import java.awt.Graphics;
 
-import animator.Animator;
+import animation.Animator;
 import renderer.display.Camera;
 
 public abstract class PhysicsObject {

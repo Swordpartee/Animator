@@ -1,27 +1,42 @@
 package renderer.display;
 
+import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
-import animations.Animation;
+import renderer.objects.PhysicsObject;
 
 public class Renderer extends Frame {
-    private final RenderGraphic gameScreen;
+    private final Canvas gameScreen;
     private final Camera camera;
+    private final List<PhysicsObject> physicsObjects;
+    private final ScheduledExecutorService itterator;
     private int width = 800;
     private int height = 600;
-    private boolean visible = false;
+    private static final int FRAME_DURATION = 1000 / 60;
+    private boolean visible = true;
     private String title = "Animator";
 
-    public Renderer() {
+    public Renderer(Canvas gameScreen) {
         super();
 
         this.camera = new Camera(10, 10, 10, 0, 0, 0, 60.0f, 800.0f / 600.0f, 0.1f, 1000.0f);
         
+        this.itterator = Executors.newSingleThreadScheduledExecutor();
+
+        this.physicsObjects = new ArrayList<>();
+
+        this.gameScreen = gameScreen;
+
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -31,7 +46,6 @@ public class Renderer extends Frame {
             }
         });
 
-        this.gameScreen = new RenderGraphic();
         add(gameScreen);        
         pack();
         gameScreen.createBufferStrategy(3);
@@ -57,21 +71,40 @@ public class Renderer extends Frame {
         gameScreen.setVisible(visible);
     }
 
-    public Animation moveCameraTo(float x, float y, float z, int duration) {
-        return camera.moveTo(x, y, z, duration);
-    }
-
-    public Animation moveCameraTargetTo(float x, float y, float z, int duration) {
-        return camera.moveTargetTo(x, y, z, duration);
-    }
-
     @Override
     public void repaint() {
         BufferStrategy bufferStrategy = gameScreen.getBufferStrategy();
         Graphics g = bufferStrategy.getDrawGraphics();
+        camera.updateProjectionMatrix();
         gameScreen.update(g);
+        drawAxies(g);
+        physicsObjects.forEach(physicsObject -> physicsObject.paint(g, camera));
         g.dispose();
         bufferStrategy.show();
         Toolkit.getDefaultToolkit().sync();
     }
+
+    public void drawAxies(Graphics g) {
+        float[] origin = camera.convertTo2D(new float[] {0, 0, 0});
+        float[] x = camera.convertTo2D(new float[] {10, 0, 0});
+        float[] y = camera.convertTo2D(new float[] {0, 10, 0});
+        float[] z = camera.convertTo2D(new float[] {0, 0, 10});
+
+        g.setColor(Color.RED);
+        g.drawLine((int) origin[0], (int) origin[1], (int) x[0], (int) x[1]);
+        g.setColor(Color.BLUE);
+        g.drawLine((int) origin[0], (int) origin[1], (int) y[0], (int) y[1]);
+        g.setColor(Color.GREEN);
+        g.drawLine((int) origin[0], (int) origin[1], (int) z[0], (int) z[1]);
+    }
+
+    public void register(PhysicsObject physicsObject) {
+        physicsObjects.add(physicsObject);
+    }
+
+    public void start() {
+        applyConfig();
+        itterator.scheduleAtFixedRate(this::repaint, 0, FRAME_DURATION, java.util.concurrent.TimeUnit.MILLISECONDS);
+    }
+    
 }

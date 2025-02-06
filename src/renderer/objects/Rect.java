@@ -1,11 +1,13 @@
 package renderer.objects;
 
-import animations.Animation;
 import renderer.display.Camera;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+
+import animation.Animation;
 
 public class Rect extends PhysicsObject {
     private float x;
@@ -14,8 +16,9 @@ public class Rect extends PhysicsObject {
     private float width;
     private float height;
     private float depth;
+    private Color color;
 
-    public Rect(float x, float y, float z, float width, float height, float depth) {
+    public Rect(float x, float y, float z, float width, float height, float depth, Color color) {
         super();
 
         this.x = x;
@@ -24,6 +27,7 @@ public class Rect extends PhysicsObject {
         this.width = width;
         this.height = height;
         this.depth = depth;
+        this.color = color;
     }
 
     @Override
@@ -31,6 +35,8 @@ public class Rect extends PhysicsObject {
         float halfWidth = width / 2;
         float halfHeight = height / 2;
         float halfDepth = depth / 2;
+
+        g.setColor(color);
 
         float[][] points = {
             {x - halfWidth, y - halfHeight, z - halfDepth},
@@ -64,6 +70,10 @@ public class Rect extends PhysicsObject {
     @Override
     public String toString() {
         return "Rect";
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     public Animation moveTo(float x, float y, float z, int duration) {

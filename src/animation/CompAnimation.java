@@ -1,4 +1,4 @@
-package animations;
+package animation;
 
 import java.util.ArrayList;
 import java.util.Arrays;

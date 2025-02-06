@@ -1,4 +1,4 @@
-package animations;
+package animation;
 
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingDeque;
