@@ -1,7 +1,7 @@
-package objects;
+package renderer.objects;
 
 import animations.Animation;
-import display.Camera;
+import renderer.display.Camera;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;

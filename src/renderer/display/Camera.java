@@ -1,4 +1,4 @@
-package display;
+package renderer.display;
 
 import animations.Animation;
 

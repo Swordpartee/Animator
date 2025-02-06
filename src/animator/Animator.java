@@ -1,8 +1,8 @@
-package tools;
+package animator;
 
 import animations.Animation;
-import display.Display;
-import objects.PhysicsObject;
+import renderer.display.Renderer;
+import renderer.objects.PhysicsObject;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
@@ -15,9 +15,9 @@ import java.util.concurrent.LinkedBlockingDeque;
 public class Animator {
     public static final int FRAME_DURATION = 1000 / 60;
 
-    public static final Display display = new Display();
+    public static final Renderer display = new Renderer();
     private static final AnimationItterator iterator = new AnimationItterator(1, FRAME_DURATION);
-    private static final List<PhysicsObject>physicsObjects = new ArrayList<>();
+    private static final List<PhysicsObject> physicsObjects = new ArrayList<>();
     private static final Queue<Animation> animations = new LinkedBlockingDeque<>();
 
     public void config(boolean visible, int width, int height, String title) {
@@ -40,6 +40,14 @@ public class Animator {
         for (int i = 0; i < n; i++) {
             animations.poll();
         }
+    }
+
+    public Animation moveCameraTo(float x, float y, float z, int duration) {
+        return display.moveCameraTo(x, y, z, duration);
+    }
+
+    public Animation moveCameraTargetTo(float x, float y, float z, int duration) {
+        return display.moveCameraTargetTo(x, y, z, duration);
     }
 
     public static void start() {

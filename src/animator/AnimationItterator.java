@@ -1,4 +1,4 @@
-package tools;
+package animator;
 
 import animations.Animation;
 import java.util.Queue;

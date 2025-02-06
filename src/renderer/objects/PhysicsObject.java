@@ -1,9 +1,9 @@
-package objects;
+package renderer.objects;
 
 import java.awt.Graphics;
 
-import display.Camera;
-import tools.Animator;
+import animator.Animator;
+import renderer.display.Camera;
 
 public abstract class PhysicsObject {
     public PhysicsObject() {

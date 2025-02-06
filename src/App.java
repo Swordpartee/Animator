@@ -1,5 +1,5 @@
-import objects.Rect;
-import tools.Animator;
+import animator.Animator;
+import renderer.objects.Rect;
 
 public class App {
     public static Rect rect1;
@@ -9,7 +9,7 @@ public class App {
 
         Animator.add(rect1.moveTo(-15, -15, -10, 60));
 
-        Animator.add(Animator.display.getCamera().moveTo(50, 50, 50, 60));
+        Animator.add(Animator.display.moveCameraTo(50, 50, 50, 60));
         
         Animator.add(rect1.moveTo(0, 0, 0, 60));
 
@@ -17,7 +17,7 @@ public class App {
 
         Animator.add(rect1.scaleTo(3, 3, 3, 60));
 
-        Animator.add(Animator.display.getCamera().moveTo(50, 0, 0, 60));
+        Animator.add(Animator.display.moveCameraTo(50, 0, 0, 60));
 
         Animator.add(rect1.moveTo(5, 0, 0, 60));
 

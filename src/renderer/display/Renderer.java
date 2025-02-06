@@ -1,4 +1,4 @@
-package display;
+package renderer.display;
 
 import java.awt.Frame;
 import java.awt.Graphics;
@@ -7,15 +7,17 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 
-public class Display extends Frame {
-    private final AnimationScreen gameScreen;
+import animations.Animation;
+
+public class Renderer extends Frame {
+    private final RenderGraphic gameScreen;
     private final Camera camera;
     private int width = 800;
     private int height = 600;
     private boolean visible = false;
     private String title = "Animator";
 
-    public Display() {
+    public Renderer() {
         super();
 
         this.camera = new Camera(10, 10, 10, 0, 0, 0, 60.0f, 800.0f / 600.0f, 0.1f, 1000.0f);
@@ -29,7 +31,7 @@ public class Display extends Frame {
             }
         });
 
-        this.gameScreen = new AnimationScreen();
+        this.gameScreen = new RenderGraphic();
         add(gameScreen);        
         pack();
         gameScreen.createBufferStrategy(3);
@@ -53,6 +55,14 @@ public class Display extends Frame {
         setVisible(visible);
         gameScreen.setSize(width, height);
         gameScreen.setVisible(visible);
+    }
+
+    public Animation moveCameraTo(float x, float y, float z, int duration) {
+        return camera.moveTo(x, y, z, duration);
+    }
+
+    public Animation moveCameraTargetTo(float x, float y, float z, int duration) {
+        return camera.moveTargetTo(x, y, z, duration);
     }
 
     @Override
