@@ -1,8 +1,11 @@
 package display;
 
 import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferStrategy;
 
 public class Display extends Frame {
     private final AnimationScreen gameScreen;
@@ -27,8 +30,9 @@ public class Display extends Frame {
         });
 
         this.gameScreen = new AnimationScreen();
-        add(gameScreen);
+        add(gameScreen);        
         pack();
+        gameScreen.createBufferStrategy(3);
         
     }
 
@@ -53,6 +57,11 @@ public class Display extends Frame {
 
     @Override
     public void repaint() {
-        gameScreen.repaint();
+        BufferStrategy bufferStrategy = gameScreen.getBufferStrategy();
+        Graphics g = bufferStrategy.getDrawGraphics();
+        gameScreen.update(g);
+        g.dispose();
+        bufferStrategy.show();
+        Toolkit.getDefaultToolkit().sync();
     }
 }

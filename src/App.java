@@ -17,7 +17,7 @@ public class App {
 
         Animator.add(rect1.scaleTo(3, 3, 3, 60));
 
-        Animator.add(Animator.display.getCamera().moveTo(0, 0, 50, 60));
+        Animator.add(Animator.display.getCamera().moveTo(50, 0, 0, 60));
 
         Animator.add(rect1.moveTo(5, 0, 0, 60));
 
@@ -25,7 +25,7 @@ public class App {
 
         Animator.add(rect1.moveTo(0, 0, 5, 60));
 
-        Animator.add(rect1.scaleTo(3, 3, 1, 60));
+        Animator.add(rect1.scaleTo(3, 3, 0, 60));
 
         Animator.start();
     }
