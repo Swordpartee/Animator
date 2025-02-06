@@ -8,10 +8,22 @@ public class App {
         rect1 = new Rect(-10, -10, -10, 3, 3, 3);
 
         Animator.add(rect1.moveTo(-15, -15, -10, 60));
+
+        Animator.add(Animator.display.getCamera().moveTo(50, 50, 50, 60));
         
         Animator.add(rect1.moveTo(0, 0, 0, 60));
 
         Animator.add(rect1.scaleTo(3, 3, 6, 60));
+
+        Animator.add(rect1.scaleTo(3, 3, 3, 60));
+
+        Animator.add(Animator.display.getCamera().moveTo(0, 0, 50, 60));
+
+        Animator.add(rect1.moveTo(5, 0, 0, 60));
+
+        Animator.add(rect1.moveTo(0, 5, 0, 60));
+
+        Animator.add(rect1.moveTo(0, 0, 5, 60));
 
         Animator.add(rect1.scaleTo(3, 3, 1, 60));
 

@@ -6,6 +6,7 @@ import objects.PhysicsObject;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
@@ -54,6 +55,20 @@ public class Animator {
     }
 
     public static void paint(Graphics g) {
+        display.getCamera().updateProjectionMatrix();
+
+        g.setColor(Color.RED);
+        int centerX = display.getWidth() / 2;
+        int centerY = display.getHeight() / 2;
+
+        g.drawLine(centerX, centerY, (int) display.getCamera().convertTo2D(new float[]{5, 0, 0})[0], (int) display.getCamera().convertTo2D(new float[]{5, 0, 0})[1]);
+
+        g.setColor(Color.GREEN);
+        g.drawLine(centerX, centerY, (int) display.getCamera().convertTo2D(new float[]{0, 5, 0})[0], (int) display.getCamera().convertTo2D(new float[]{0, 5, 0})[1]);
+
+        g.setColor(Color.BLUE);
+        g.drawLine(centerX, centerY, (int) display.getCamera().convertTo2D(new float[]{0, 0, 5})[0], (int) display.getCamera().convertTo2D(new float[]{0, 0, 5})[1]);
+
         physicsObjects.forEach(physicsObject -> physicsObject.paint(g, display.getCamera()));
     }
 
