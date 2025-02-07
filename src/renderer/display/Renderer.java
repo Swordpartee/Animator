@@ -1,6 +1,5 @@
 package renderer.display;
 
-import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Graphics;
@@ -13,12 +12,12 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-import renderer.objects.PhysicsObject;
+import renderer.objects.Object;
 
 public class Renderer extends Frame {
-    private final Canvas gameScreen;
+    private final Screen gameScreen;
     private final Camera camera;
-    private final List<PhysicsObject> physicsObjects;
+    private final List<Object> Objects;
     private final ScheduledExecutorService itterator;
     private int width = 800;
     private int height = 600;
@@ -26,14 +25,14 @@ public class Renderer extends Frame {
     private boolean visible = true;
     private String title = "Animator";
 
-    public Renderer(Canvas gameScreen) {
+    public Renderer(Screen gameScreen, Camera camera) {
         super();
 
-        this.camera = new Camera(10, 10, 10, 0, 0, 0, 60.0f, 800.0f / 600.0f, 0.1f, 1000.0f);
-        
+        this.camera = camera;
+
         this.itterator = Executors.newSingleThreadScheduledExecutor();
 
-        this.physicsObjects = new ArrayList<>();
+        this.Objects = new ArrayList<>();
 
         this.gameScreen = gameScreen;
 
@@ -46,10 +45,10 @@ public class Renderer extends Frame {
             }
         });
 
-        add(gameScreen);        
+        add(gameScreen);
         pack();
         gameScreen.createBufferStrategy(3);
-        
+
     }
 
     public Camera getCamera() {
@@ -78,17 +77,17 @@ public class Renderer extends Frame {
         camera.updateProjectionMatrix();
         gameScreen.update(g);
         drawAxies(g);
-        physicsObjects.forEach(physicsObject -> physicsObject.paint(g, camera));
+        Objects.forEach(Object -> Object.paint(g, camera));
         g.dispose();
         bufferStrategy.show();
         Toolkit.getDefaultToolkit().sync();
     }
 
     public void drawAxies(Graphics g) {
-        float[] origin = camera.convertTo2D(new float[] {0, 0, 0});
-        float[] x = camera.convertTo2D(new float[] {10, 0, 0});
-        float[] y = camera.convertTo2D(new float[] {0, 10, 0});
-        float[] z = camera.convertTo2D(new float[] {0, 0, 10});
+        float[] origin = camera.convertTo2D(new float[] { 0, 0, 0 });
+        float[] x = camera.convertTo2D(new float[] { 5, 0, 0 });
+        float[] y = camera.convertTo2D(new float[] { 0, 5, 0 });
+        float[] z = camera.convertTo2D(new float[] { 0, 0, 5 });
 
         g.setColor(Color.RED);
         g.drawLine((int) origin[0], (int) origin[1], (int) x[0], (int) x[1]);
@@ -98,13 +97,13 @@ public class Renderer extends Frame {
         g.drawLine((int) origin[0], (int) origin[1], (int) z[0], (int) z[1]);
     }
 
-    public void register(PhysicsObject physicsObject) {
-        physicsObjects.add(physicsObject);
+    public void register(Object Object) {
+        Objects.add(Object);
     }
 
     public void start() {
         applyConfig();
         itterator.scheduleAtFixedRate(this::repaint, 0, FRAME_DURATION, java.util.concurrent.TimeUnit.MILLISECONDS);
     }
-    
+
 }

@@ -1,31 +1,33 @@
-package animation;
+package animation.animations;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class CompAnimation extends Animation {
+public class ParallelAnimation extends Animation {
     private final List<Animation> animations = new ArrayList<>();
     
-    public CompAnimation(Animation ...animations) {
+    public ParallelAnimation(Animation ...animations) {
         this.animations.addAll(Arrays.asList(animations));
-
-        addSelf();
     }
 
-    @Override
-    public void generate() {
+    public int getMaxLength() {
         int maxlength = 0;
-
-        animations.forEach(Animation::generate);
-
         for (Animation animation : animations) {
             if (animation.getLength() > maxlength) {
                 maxlength = animation.getLength();
             }
         }
+        return maxlength;
+    }
 
-        for (int i = 0; i < maxlength; i++) {
+    @Override
+    public void generate() {
+        animations.forEach(Animation::generate);
+
+        int maxLength = getMaxLength();
+
+        for (int i = 0; i < maxLength; i++) {
             addFrame(() -> {
                 animations.forEach(animation -> {
                     Runnable frame = animation.getFrames().poll();
