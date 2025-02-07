@@ -32,14 +32,14 @@ public class App {
         Animator.add(rect1.scaleTo(3, 3, 0, 60));
 
         Animator.add(new ParallelAnimation(
-            Animator.moveCameraTo(50, 50, 0, 60),
+            Animator.moveCameraTo(50, 25, 0, 60),
             rect1.moveTo(0, 0, 0, 60), 
             rect1.scaleTo(3, 3, 3, 60)
         ));
 
         Animator.add(new ParallelAnimation(
             Animator.moveCameraTargetTo(10, 0, 0, 120),
-            Animator.moveCameraTo(60, 50, 0, 120)
+            Animator.moveCameraTo(60, 25, 0, 120)
         ));
 
         Animator.add(Animator.moveCameraTo(50, 0, 0, 60));
