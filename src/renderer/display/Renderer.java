@@ -2,7 +2,6 @@ package renderer.display;
 
 import java.awt.Color;
 import java.awt.Frame;
-import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -12,11 +11,13 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import renderer.input.Listener;
 import renderer.renderables.Renderable;
 
 public class Renderer extends Frame {
     private final Screen gameScreen;
     private final Camera camera;
+    private final Listener listener;
     private final List<Renderable> objects;
     private final ScheduledExecutorService itterator;
     private int width = 800;
@@ -25,16 +26,18 @@ public class Renderer extends Frame {
     private boolean visible = true;
     private String title = "Animator";
 
-    public Renderer(Screen gameScreen, Camera camera) {
+    public Renderer(Runnable update, Camera camera, Listener listener) {
         super();
 
         this.camera = camera;
+
+        this.listener = listener;
 
         this.itterator = Executors.newSingleThreadScheduledExecutor();
 
         this.objects = new ArrayList<>();
 
-        this.gameScreen = gameScreen;
+        this.gameScreen = new Screen(update);
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -45,10 +48,16 @@ public class Renderer extends Frame {
             }
         });
 
+        addKeyListener(listener);
+
         add(gameScreen);
         pack();
         gameScreen.createBufferStrategy(3);
 
+    }
+
+    public Listener getListener() {
+        return listener;
     }
 
     public Camera getCamera() {
@@ -73,28 +82,28 @@ public class Renderer extends Frame {
     @Override
     public void repaint() {
         BufferStrategy bufferStrategy = gameScreen.getBufferStrategy();
-        Graphics g = bufferStrategy.getDrawGraphics();
+        RenderGraphic g = new RenderGraphic(bufferStrategy.getDrawGraphics());
         camera.updateProjectionMatrix();
-        gameScreen.update(g);
+        gameScreen.update(g.getGraphic());
         drawAxies(g);
         objects.forEach(object -> object.paint(g, camera));
-        g.dispose();
+        g.getGraphic().dispose();
         bufferStrategy.show();
         Toolkit.getDefaultToolkit().sync();
     }
 
-    public void drawAxies(Graphics g) {
-        float[] origin = camera.convertTo2D(new float[] { 0, 0, 0 });
-        float[] x = camera.convertTo2D(new float[] { 5, 0, 0 });
-        float[] y = camera.convertTo2D(new float[] { 0, 5, 0 });
-        float[] z = camera.convertTo2D(new float[] { 0, 0, 5 });
+    public void drawAxies(RenderGraphic g) {
+        float[] origin = { 0, 0, 0 };
+        float[] x = { 5, 0, 0 };
+        float[] y = { 0, 5, 0 };
+        float[] z = { 0, 0, 5 };
 
         g.setColor(Color.RED);
-        g.drawLine((int) origin[0], (int) origin[1], (int) x[0], (int) x[1]);
-        g.setColor(Color.BLUE);
-        g.drawLine((int) origin[0], (int) origin[1], (int) y[0], (int) y[1]);
+        g.drawLine(origin, x, camera);
         g.setColor(Color.GREEN);
-        g.drawLine((int) origin[0], (int) origin[1], (int) z[0], (int) z[1]);
+        g.drawLine(origin, y, camera);
+        g.setColor(Color.BLUE);
+        g.drawLine(origin, z, camera);
     }
 
     public void register(Renderable Object) {

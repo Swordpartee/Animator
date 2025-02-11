@@ -129,4 +129,32 @@ public class Camera {
 
         return screenCoords;
     }
+
+    public boolean isVisible(float[] worldCoords) {
+        // float[] viewCoords = applyViewTransformation(worldCoords);
+        // float z = viewCoords[2]; // Z-coordinate in view space
+    
+        // // Check if the object is within the near and far planes
+        // if (z < near || z > far) {
+        //     return false;
+        // }
+    
+        // // Check if the object is within the view frustum (left, right, top, bottom planes)
+        // float[] clipCoords = new float[4];
+        // for (int i = 0; i < 4; i++) {
+        //     clipCoords[i] = viewCoords[0] * projectionMatrix[i][0] + viewCoords[1] * projectionMatrix[i][1] + viewCoords[2] * projectionMatrix[i][2] + projectionMatrix[i][3];
+        // }
+    
+        // // Perform perspective divide
+        // float[] ndcCoords = new float[3];
+        // ndcCoords[0] = clipCoords[0] / clipCoords[3];
+        // ndcCoords[1] = clipCoords[1] / clipCoords[3];
+        // ndcCoords[2] = clipCoords[2] / clipCoords[3];
+    
+        // // Check if the object is within the normalized device coordinates (NDC) range [-1, 1]
+        // return ndcCoords[0] >= -1 && ndcCoords[0] <= 1 && ndcCoords[1] >= -1 && ndcCoords[1] <= 1 && ndcCoords[2] >= -1 && ndcCoords[2] <= 1;
+
+        return true;
+    }
+
 }
