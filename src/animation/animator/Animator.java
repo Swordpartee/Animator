@@ -2,7 +2,7 @@ package animation.animator;
 
 import renderer.display.Renderer;
 import renderer.display.Screen;
-import renderer.objects.Object;
+import renderer.renderables.Renderable;
 
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -16,7 +16,7 @@ public class Animator {
     public static final Renderer renderer = new Renderer(
         new Screen(() -> update()), camera);
     
-    public static void register(Object object) {
+    public static void register(Renderable object) {
         renderer.register(object);
     }
 

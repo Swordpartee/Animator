@@ -1,8 +1,9 @@
 package animation.objects;
 
 import animation.animations.Animation;
+import renderer.renderables.Cube;
+
 import java.awt.Color;
-import renderer.objects.Cube;
 
 public class AnimationCube extends Cube {
 

@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-import renderer.objects.Object;
+import renderer.renderables.Renderable;
 
 public class Renderer extends Frame {
     private final Screen gameScreen;
     private final Camera camera;
-    private final List<Object> Objects;
+    private final List<Renderable> objects;
     private final ScheduledExecutorService itterator;
     private int width = 800;
     private int height = 600;
@@ -32,7 +32,7 @@ public class Renderer extends Frame {
 
         this.itterator = Executors.newSingleThreadScheduledExecutor();
 
-        this.Objects = new ArrayList<>();
+        this.objects = new ArrayList<>();
 
         this.gameScreen = gameScreen;
 
@@ -77,7 +77,7 @@ public class Renderer extends Frame {
         camera.updateProjectionMatrix();
         gameScreen.update(g);
         drawAxies(g);
-        Objects.forEach(Object -> Object.paint(g, camera));
+        objects.forEach(object -> object.paint(g, camera));
         g.dispose();
         bufferStrategy.show();
         Toolkit.getDefaultToolkit().sync();
@@ -97,8 +97,8 @@ public class Renderer extends Frame {
         g.drawLine((int) origin[0], (int) origin[1], (int) z[0], (int) z[1]);
     }
 
-    public void register(Object Object) {
-        Objects.add(Object);
+    public void register(Renderable Object) {
+        objects.add(Object);
     }
 
     public void start() {
