@@ -131,10 +131,12 @@ public class Camera {
     }
 
     public boolean isVisible(float[] worldCoords) {
-        // float[] viewCoords = applyViewTransformation(worldCoords);
-        // float z = viewCoords[2]; // Z-coordinate in view space
+        float[] viewCoords = applyViewTransformation(worldCoords);
+        float z = viewCoords[2]; // Z-coordinate in view space
+
+        return false; // Check if the object is in front of the camera
     
-        // // Check if the object is within the near and far planes
+        // Check if the object is within the near and far planes
         // if (z < near || z > far) {
         //     return false;
         // }
@@ -154,7 +156,6 @@ public class Camera {
         // // Check if the object is within the normalized device coordinates (NDC) range [-1, 1]
         // return ndcCoords[0] >= -1 && ndcCoords[0] <= 1 && ndcCoords[1] >= -1 && ndcCoords[1] <= 1 && ndcCoords[2] >= -1 && ndcCoords[2] <= 1;
 
-        return true;
     }
 
 }

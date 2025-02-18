@@ -41,10 +41,10 @@ public class SphereCollider implements Collider {
     @Override
     public boolean collliding(Collider other) {
         switch (other.getType()) {
-            case ColliderType.SPHERE -> {
+            case SPHERE -> {
                 return collideWithSphere((SphereCollider) other);
             }
-            case ColliderType.CUBE -> {
+            case CUBE -> {
                 return collideWithCube((CubeCollider) other);
             }
             default -> {

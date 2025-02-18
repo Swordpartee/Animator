@@ -1,12 +1,12 @@
 package engine;
 
-import renderer.Factory;
 import renderer.display.*;
 import renderer.input.*;
 import renderer.renderables.Renderable;
+import renderer.tools.Factory;
 
 public class Engine {
-    private static final Camera camera = Factory.createCamera();   
+    private static final Camera camera = new Camera(5, 2, 2, 0, 2, 2, 90.0f, 800.0f / 600.0f, 0.1f, 10f);   
     
     private static final Listener listener = Factory.createListener();
 

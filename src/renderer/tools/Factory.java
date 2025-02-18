@@ -1,4 +1,4 @@
-package renderer;
+package renderer.tools;
 
 import java.awt.Color;
 import renderer.display.Camera;

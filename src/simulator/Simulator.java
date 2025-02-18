@@ -3,10 +3,10 @@ package simulator;
 import simulator.objects.PhysicsObject;
 import java.util.ArrayList;
 import java.util.List;
-import renderer.Factory;
 
 import renderer.display.Camera;
 import renderer.display.Renderer;
+import renderer.tools.Factory;
 import simulator.bodies.PhysicsBody;
 
 public class Simulator {
@@ -23,7 +23,7 @@ public class Simulator {
 
     public void update() {
         bodies.forEach(body -> body.applyVelocity());
-        bodies.forEach(body -> body.updateCollision());
+        bodies.forEach(body -> body.updateCollision(bodies));
     }
 
 }

@@ -3,12 +3,12 @@ package simulator.bodies;
 import java.util.List;
 import simulator.colliders.Collider;
 
-public class Rigidbody implements PhysicsBody {
+public class LinearRigidbody implements PhysicsBody {
     private Collider collider;
     private float[] vel;
     private float[] pos;
 
-    public Rigidbody(Collider collider, float x, float y, float z) {
+    public LinearRigidbody(Collider collider, float x, float y, float z) {
         pos = new float[] {x, y, z};
         vel = new float[] {0, 0, 0};
 
