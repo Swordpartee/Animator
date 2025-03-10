@@ -1,47 +1,160 @@
 package util;
 
-public class Vector extends Point {
+public class Vector {
+    private double x;
+    private double y;
+    private double z;
+    private double w;
+
     public Vector(double x, double y, double z) {
-        super(x, y, z);
+        this(x, y, z, 1);
     }
 
     public Vector(double x, double y, double z, double w) {
-        super(x, y, z, w);
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.w = w;
     }
 
-    public Vector(Point point) {
-        super(point.getX(), point.getY(), point.getZ());
-    }
 
     public Vector() {
-        super();
+        this(0, 0, 0, 1);
     }
 
-    public Vector add(Vector vector) {
-        return new Vector(getX() + vector.getX(), getY() + vector.getY(), getZ() + vector.getZ());
+
+    public Vector(double x, double y) {
+        this(x, y, 0, 1);
     }
 
-    public Vector subtract(Vector vector) {
-        return new Vector(getX() - vector.getX(), getY() - vector.getY(), getZ() - vector.getZ());
+    public Vector(Vector vector) {
+        this.x = vector.x;
+        this.y = vector.y;
+        this.z = vector.z;
+        this.w = vector.w;
+    }
+
+    public Vector get() {
+        return this;
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public double getZ() {
+        return z;
+    }
+
+    public double getW() {
+        return w;
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    public void setZ(double z) {
+        this.z = z;
+    }
+
+    public void setW(double w) {
+        this.w = w;
+    }
+
+    public void setPose(double x, double y, double z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    public void set(double x, double y, double z, double w) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.w = w;
+    }
+
+    public void set(Vector point) {
+        this.x = point.x;
+        this.y = point.y;
+        this.z = point.z;
+        this.w = point.w;
+    }
+
+    public void move(double dx, double dy, double dz) {
+        x += dx;
+        y += dy;
+        z += dz;
+    }
+
+    public void move(Vector point) {
+        x += point.x;
+        y += point.y;
+        z += point.z;
+    }
+
+    public void moveX(double dx) {
+        x += dx;
+    }
+
+    public void moveY(double dy) {
+        y += dy;
+    }
+
+    public void moveZ(double dz) {
+        z += dz;
+    }
+
+    public void add(Vector vector) {
+        setX(getX() + vector.getX());
+        setY(getY() + vector.getY());
+        setZ(getZ() + vector.getZ());
+    }
+
+    public void add(double x, double y, double z) {
+        setX(getX() + x);
+        setY(getY() + y);
+        setZ(getZ() + z);
+    }
+
+    public void subtract(Vector vector) {
+        setX(getX() - vector.getX());
+        setY(getY() - vector.getY());
+        setZ(getZ() - vector.getZ());
+    }
+
+    public void subtract(double x, double y, double z) {
+        setX(getX() - x);
+        setY(getY() - y);
+        setZ(getZ() - z);
     }
     
     public Vector scale(double scalar) {
-        return new Vector(getX() * scalar, getY() * scalar, getZ() * scalar);
+        setX(getX() * scalar);
+        setY(getY() * scalar);
+        setZ(getZ() * scalar);
+        return this;
     }
 
-    public double dotProduct(Vector other) {
-        return getX() * other.getX() + getY() * other.getY() + getZ() * other.getZ();
-    }
-
-    public Vector crossProduct(Vector other) {
-        return new Vector(getY() * other.getZ() - getZ() * other.getY(), getZ() * other.getX() - getX() * other.getZ(), getX() * other.getY() - getY() * other.getX());
-    }
-
-    public double magnitude() {
-        return Math.sqrt(getX() * getX() + getY() * getY() + getZ() * getZ());
+    public double getMagnitude() {
+        return Functions.sqrt(getX() * getX() + getY() * getY() + getZ() * getZ());
     }
 
     public Vector normalize() {
-        return scale(1 / magnitude());
+        return scale(1 / getMagnitude());
+    }
+
+    @Override
+    public String toString() {
+        return "(" + x + ", " + y + ", " + z + ")";
     }
 }

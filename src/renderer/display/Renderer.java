@@ -19,6 +19,8 @@ public class Renderer extends Frame {
     private final List<Renderable> renderables = new ArrayList<>();
     private final ScheduledExecutorService itterator = Executors.newSingleThreadScheduledExecutor();
 
+    private Runnable updateFunction;
+
     private final Canvas canvas;
     private final Camera camera;
 
@@ -26,13 +28,9 @@ public class Renderer extends Frame {
 
     public Renderer(Runnable updateFunction, Camera camera) {
         this.camera = camera;
+        this.updateFunction = updateFunction;
 
-        canvas = new Canvas() {
-            @Override
-            public void paint(Graphics g) {
-                updateFunction.run();
-            }
-        };
+        canvas = new Canvas();
         
         add(canvas);
         pack();
@@ -61,7 +59,9 @@ public class Renderer extends Frame {
     public void repaint() {
         BufferStrategy buffer = canvas.getBufferStrategy();
         RenderGraphic g = new RenderGraphic(buffer.getDrawGraphics());
+        g.getGraphics().clearRect(0, 0, getWidth(), getHeight());
         camera.update();
+        updateFunction.run();
         renderables.forEach(r -> r.paint(g, camera));
         g.getGraphics().dispose();
         buffer.show();
