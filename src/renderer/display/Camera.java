@@ -71,18 +71,13 @@ public class Camera {
     }
 
     private void updateViewMatrix() {
-        Vector forward = new Vector();
         Vector up = new Vector(0, 1, 0);
-        Vector right;
-        Vector cameraUp;
 
-        forward = Functions.subtractVectors(target, position).normalize();
+        Vector forward = Functions.subtractVectors(target, position).normalize();
 
-        // Calculate right vector
-        right = Functions.crossProduct(forward, up).normalize();
+        Vector right = Functions.crossProduct(forward, up).normalize();
 
-        // Calculate camera up vector
-        cameraUp = Functions.crossProduct(forward, right).normalize();
+        Vector cameraUp = Functions.crossProduct(forward, right).normalize();
 
         // Set view matrix
         viewMatrix[0][0] = right.getX();

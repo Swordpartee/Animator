@@ -10,6 +10,8 @@ public interface Physicsbody {
 
     public Collider getCollider();
 
+    public void setMass(double mass);
+
     public void setVelocity(Vector velocity);
 
     public void applyForce(Vector force);

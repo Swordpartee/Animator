@@ -1,12 +1,11 @@
 package simulator.physicsbodies;
 
-import java.util.function.Function;
 import simulator.colliders.Collider;
 import util.Functions;
 import util.Vector;
 
 public class Rigidbody implements Physicsbody {
-    private Collider collider;
+    private final Collider collider;
     private double mass;
     private Vector velocity;
 
@@ -25,6 +24,11 @@ public class Rigidbody implements Physicsbody {
     @Override
     public Vector getVelocity() {
         return velocity;
+    }
+
+    @Override
+    public void setMass(double mass) {
+        this.mass = mass;
     }
 
     @Override

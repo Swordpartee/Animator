@@ -2,7 +2,6 @@ package renderer.display;
 
 import java.awt.Canvas;
 import java.awt.Frame;
-import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -19,7 +18,7 @@ public class Renderer extends Frame {
     private final List<Renderable> renderables = new ArrayList<>();
     private final ScheduledExecutorService itterator = Executors.newSingleThreadScheduledExecutor();
 
-    private Runnable updateFunction;
+    private final Runnable updateFunction;
 
     private final Canvas canvas;
     private final Camera camera;
