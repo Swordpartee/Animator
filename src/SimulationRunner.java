@@ -7,7 +7,7 @@ import simulator.colliders.BoxCollider;
 import simulator.physicsbodies.Physicsbody;
 import simulator.physicsbodies.Rigidbody;
 
-public class App {
+public class SimulationRunner {
     private static Camera camera;
     private static Renderer renderer;
     private static AxisBox player;
