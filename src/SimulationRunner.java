@@ -8,6 +8,8 @@ import simulator.physicsbodies.Physicsbody;
 import simulator.physicsbodies.Rigidbody;
 
 public class App {
+    private static Camera camera;
+    private static Renderer renderer;
     private static AxisBox player;
     private static BoxCollider playerCollider;
     private static Rigidbody playerPhysicsbody;
@@ -16,17 +18,19 @@ public class App {
     private static Rigidbody groundPhysicsbody;
 
     public static void main(String[] args) {
-        Camera camera = new Camera(25, 10, 0, 0, 0, 0, 120, 800 / 600, 0.1, 100);
-        Renderer renderer = new Renderer(() -> update(), camera);
+        camera = new Camera(25, 10, 0, 0, 0, 0, 120, 800 / 600, 0.1, 100);
+        renderer = new Renderer(() -> update(), camera);
 
         ground = new AxisBox(0, 0, 0, 10, 0.1, 10, Color.RED);
-        groundCollider = new BoxCollider(0, 0, 0, 10, 0.1, 10);
+        groundCollider = new BoxCollider(0, 0, 0, 10, 0, 10);
         groundPhysicsbody = new Rigidbody(groundCollider, 1000000);
+        groundPhysicsbody.applyForce(0, .08, 0);
         renderer.registerRenderable(ground);
         
         player = new AxisBox(0, 3, 0, 1, 1, 1, Color.BLACK);
         playerCollider = new BoxCollider(0, 3, 0, 1, 1, 1);
         playerPhysicsbody = new Rigidbody(playerCollider, 1);
+        playerPhysicsbody.applyForce(0, 0, 0.002);
         renderer.registerRenderable(player);
 
         Axis axis = new Axis(3);
@@ -36,12 +40,19 @@ public class App {
     }
 
     public static void update() {
-        playerPhysicsbody.updatePos();
+        playerPhysicsbody.applyForce(0, -0.008, 0);
+        
         playerPhysicsbody.updateCollision(new Physicsbody[] {groundPhysicsbody});
-        playerPhysicsbody.applyForce(0, -0.025, 0);
+        groundPhysicsbody.updateCollision(new Physicsbody[] {playerPhysicsbody});
+
+        playerPhysicsbody.updatePos();
+        groundPhysicsbody.updatePos();
+
         player.set(playerPhysicsbody.getCollider().getPos());
-        // System.out.println(playerPhysicsbody.getVelocity());
-        // System.out.println(playerPhysicsbody.getCollider().getPos());
+        ground.set(groundPhysicsbody.getCollider().getPos());
+        System.out.println(playerPhysicsbody.getVelocity());
+
+        camera.getPosition().add(0, -0.1, 0);
 
     }
 }

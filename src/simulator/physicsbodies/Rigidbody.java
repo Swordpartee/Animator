@@ -54,22 +54,25 @@ public class Rigidbody implements Physicsbody {
     @Override
     public void updatePos() {
         collider.getPos().add(velocity);
-        System.out.println(collider.getPos());
     }
     
     @Override
     public void updateCollision(Physicsbody[] bodies) {
         for (Physicsbody other : bodies) {
             if (collider.collidesWith(other.getCollider())) {
-    
                 Vector relativeVelocity = Functions.subtractVectors(velocity, other.getVelocity());
                 Vector normal = Functions.subtractVectors((collider.getPos()), other.getCollider().getPos()).normalize();
+
+                if (collider == other) {
+                    continue;
+                }
     
-                double relativeVelocityAlongNormal = Functions.getDotProduct(relativeVelocity, normal);
-                double restitution = 0.8; // Coefficient of restitution (elasticity of the collision)
+                double relativeVelocityAlongNormal = Functions.getDotProduct(normal, relativeVelocity);
+    
+                double restitution = 0.9; // Coefficient of restitution (elasticity of the collision)
                 double impulseMagnitude = -(1 + restitution) * relativeVelocityAlongNormal / (1 / mass + 1 / other.getMass());
     
-                Vector impulse = normal.scale(impulseMagnitude);
+                Vector impulse = normal.scale(impulseMagnitude * 0.98);
     
                 applyForce(impulse.scale(1 / mass));
                 other.applyForce(impulse.scale(-1 / other.getMass()));
