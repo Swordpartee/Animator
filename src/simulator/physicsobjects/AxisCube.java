@@ -1,7 +1,6 @@
 package simulator.physicsobjects;
 
 import java.awt.Color;
-import renderer.display.Camera;
 import renderer.display.RenderGraphic;
 
 import renderer.renderables.AxisBox;
@@ -30,8 +29,8 @@ public class AxisCube implements PhysicsObject {
     }
 
     @Override
-    public void paint(RenderGraphic graphics, Camera camera) {
-        sprite.paint(graphics, camera);
+    public void paint(RenderGraphic graphics) {
+        sprite.paint(graphics);
     }
 
 }

@@ -44,7 +44,36 @@ public class Functions {
         return scaleVector(vector, 1 / vector.getMagnitude());
     }
 
+    public static double pow(double d, int pow) {
+        return java.lang.Math.pow(d, pow);
+    }
+
     public static double sqrt(double d) {
         return java.lang.Math.sqrt(d);
+        }
+
+    public static double sin(double d) {
+        return java.lang.Math.sin(java.lang.Math.toRadians(d));
+    }   
+
+    public static double cos(double d) {
+        return java.lang.Math.cos(java.lang.Math.toRadians(d));
     }
+
+    public static double tan(double d) {
+        return java.lang.Math.tan(java.lang.Math.toRadians(d));
+    }
+
+    public static double atan2(double y, double x) {
+        return java.lang.Math.atan2(java.lang.Math.toRadians(y), java.lang.Math.toRadians(x));
+    }
+
+    public static double toRadians(double d) {
+        return java.lang.Math.toRadians(d);
+    }
+
+    public static double toDegrees(double d) {
+        return java.lang.Math.toDegrees(d);
+    }
+
 }

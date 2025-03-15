@@ -39,7 +39,7 @@ public class Box extends Vector {
     }
 
     public void setSize(double width, double height, double depth) {
-        size.setPose(width, height, depth);
+        size.set(width, height, depth);
     }
 
     public void setWidth(double width) {

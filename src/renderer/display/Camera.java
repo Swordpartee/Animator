@@ -21,6 +21,10 @@ public class Camera {
         this.near = near;
         this.far = far;
     }
+    
+    public Camera() {
+        this(10, 10, 10, 0, 0, 0, 90, 1, 0.1, 1000);
+    }
 
     public Vector getPosition() {
         return position;
@@ -44,7 +48,19 @@ public class Camera {
 
     public void setFar(double far) {
         this.far = far;
-    }
+        }
+
+    public boolean inFrame(Vector coords) {
+        // if (coords.getZ() <= near || coords.getZ() >= far) {
+        //     return false;
+        // }
+        
+        // return coords.getX() >= -400 && coords.getX() <= 400 &&
+        //         coords.getY() >= -300 && coords.getY() <= 300;
+
+        return true;
+            
+        }
 
     private Vector applyViewMatrix(Vector coords) {
         Vector result = new Vector();
@@ -57,11 +73,28 @@ public class Camera {
 
     private Vector applyProjectionMatrix(Vector coords) {
         Vector result = new Vector();
-
         result.setX(coords.getX() * projectionMatrix[0][0] + coords.getY() * projectionMatrix[0][1] + coords.getZ() * projectionMatrix[0][2] + coords.getW() * projectionMatrix[0][3]);
         result.setY(coords.getX() * projectionMatrix[1][0] + coords.getY() * projectionMatrix[1][1] + coords.getZ() * projectionMatrix[1][2] + coords.getW() * projectionMatrix[1][3]);
         result.setZ(coords.getX() * projectionMatrix[2][0] + coords.getY() * projectionMatrix[2][1] + coords.getZ() * projectionMatrix[2][2] + coords.getW() * projectionMatrix[2][3]);
         result.setW(coords.getX() * projectionMatrix[3][0] + coords.getY() * projectionMatrix[3][1] + coords.getZ() * projectionMatrix[3][2] + coords.getW() * projectionMatrix[3][3]);
+        return result;
+    }
+
+    private Vector applyInverseViewMatrix(Vector coords) {
+        Vector result = new Vector();
+        result.setX(coords.getX() * viewMatrix[0][0] + coords.getY() * viewMatrix[1][0] + coords.getZ() * viewMatrix[2][0] + coords.getW() * viewMatrix[3][0]);
+        result.setY(coords.getX() * viewMatrix[0][1] + coords.getY() * viewMatrix[1][1] + coords.getZ() * viewMatrix[2][1] + coords.getW() * viewMatrix[3][1]);
+        result.setZ(coords.getX() * viewMatrix[0][2] + coords.getY() * viewMatrix[1][2] + coords.getZ() * viewMatrix[2][2] + coords.getW() * viewMatrix[3][2]);
+        result.setW(coords.getX() * viewMatrix[0][3] + coords.getY() * viewMatrix[1][3] + coords.getZ() * viewMatrix[2][3] + coords.getW() * viewMatrix[3][3]);
+        return result;
+    }
+
+    private Vector applyInverseProjectionMatrix(Vector coords) {
+        Vector result = new Vector();
+        result.setX(coords.getX() * projectionMatrix[0][0] + coords.getY() * projectionMatrix[1][0] + coords.getZ() * projectionMatrix[2][0] + coords.getW() * projectionMatrix[3][0]);
+        result.setY(coords.getX() * projectionMatrix[0][1] + coords.getY() * projectionMatrix[1][1] + coords.getZ() * projectionMatrix[2][1] + coords.getW() * projectionMatrix[3][1]);
+        result.setZ(coords.getX() * projectionMatrix[0][2] + coords.getY() * projectionMatrix[1][2] + coords.getZ() * projectionMatrix[2][2] + coords.getW() * projectionMatrix[3][2]);
+        result.setW(coords.getX() * projectionMatrix[0][3] + coords.getY() * projectionMatrix[1][3] + coords.getZ() * projectionMatrix[2][3] + coords.getW() * projectionMatrix[3][3]);
         return result;
     }
 
@@ -124,7 +157,30 @@ public class Camera {
         Vector screenCoords = new Vector();
         screenCoords.setX((ndcCoords.getX() * 400) + 400); // Assuming screen width is 800
         screenCoords.setY((ndcCoords.getY() * 400) + 300); // Assuming screen height is 600
+        screenCoords.setZ(ndcCoords.getZ());
 
         return screenCoords;
+    }
+
+    public Vector toScreenCoords(double x, double y, double z) {
+        return toScreenCoords(new Vector(x, y, z));
+    }
+
+    public Vector toWorldCoords(Vector screenCoords, double distance) {
+        // Convert to normalized device coordinates
+        Vector ndcCoords = new Vector();
+        ndcCoords.setX((screenCoords.getX() - 400) / 400); // Assuming screen width is 800
+        ndcCoords.setY((screenCoords.getY() - 300) / 300); // Assuming screen height is 600
+        ndcCoords.setZ(distance);
+
+        // Apply inverse projection and view matrices
+        Vector viewCoords = applyInverseProjectionMatrix(ndcCoords);
+        Vector worldCoords = applyInverseViewMatrix(viewCoords);
+
+        return worldCoords;
+    }
+
+    public Vector toWorldCoords(double x, double y, double distance) {
+        return toWorldCoords(new Vector(x, y), distance);
     }
 }

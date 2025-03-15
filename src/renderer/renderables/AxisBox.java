@@ -1,6 +1,5 @@
 package renderer.renderables;
 
-import renderer.display.Camera;
 import renderer.display.RenderGraphic;
 import util.Vector;
 import util.shapes.Box;
@@ -25,7 +24,7 @@ public class AxisBox extends Box implements Renderable {
     }
 
     @Override
-    public void paint(RenderGraphic g, Camera camera) {
+    public void paint(RenderGraphic g) {
         Vector min = super.getMin();
         Vector max = super.getMax();
 
@@ -47,10 +46,10 @@ public class AxisBox extends Box implements Renderable {
             Vector p2 = points[(i + 1) % 4];
             Vector p3 = points[i + 4];
             Vector p4 = points[(i + 1) % 4 + 4];
-            g.drawLine(p1, p2, camera);
-            g.drawLine(p1, p3, camera);
-            g.drawLine(p2, p4, camera);
-            g.drawLine(p3, p4, camera);
+            g.drawLine(p1, p2);
+            g.drawLine(p1, p3);
+            g.drawLine(p2, p4);
+            g.drawLine(p3, p4);
         }
 
     }

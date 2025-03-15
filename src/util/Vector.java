@@ -54,94 +54,134 @@ public class Vector {
         return w;
     }
 
-    public void setX(double x) {
+    public Vector setX(double x) {
         this.x = x;
+        
+        return this;
     }
 
-    public void setY(double y) {
+    public Vector setY(double y) {
         this.y = y;
+        
+        return this;
     }
 
-    public void setZ(double z) {
+    public Vector setZ(double z) {
         this.z = z;
+        
+        return this;
     }
 
-    public void setW(double w) {
+    public Vector setW(double w) {
         this.w = w;
+        
+        return this;
     }
 
-    public void setPose(double x, double y, double z) {
+    public Vector set(double x, double y) {
+        this.x = x;
+        this.y = y;
+        
+        return this;
+    }
+
+    public Vector set(double x, double y, double z) {
         this.x = x;
         this.y = y;
         this.z = z;
+        
+        return this;
     }
 
-    public void set(double x, double y, double z, double w) {
+    public Vector set(double x, double y, double z, double w) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.w = w;
+        
+        return this;
     }
 
-    public void set(Vector point) {
+    public Vector set(Vector point) {
         this.x = point.x;
         this.y = point.y;
         this.z = point.z;
         this.w = point.w;
+        
+        return this;
     }
 
-    public void move(double dx, double dy, double dz) {
+    public Vector move(double dx, double dy, double dz) {
         x += dx;
         y += dy;
         z += dz;
+        
+        return this;
     }
 
-    public void move(Vector point) {
+    public Vector move(Vector point) {
         x += point.x;
         y += point.y;
         z += point.z;
+        
+        return this;
     }
 
-    public void moveX(double dx) {
+    public Vector moveX(double dx) {
         x += dx;
+        
+        return this;
     }
 
-    public void moveY(double dy) {
+    public Vector moveY(double dy) {
         y += dy;
+        
+        return this;
     }
 
-    public void moveZ(double dz) {
+    public Vector moveZ(double dz) {
         z += dz;
+        
+        return this;
     }
 
-    public void add(Vector vector) {
+    public Vector add(Vector vector) {
         setX(getX() + vector.getX());
         setY(getY() + vector.getY());
         setZ(getZ() + vector.getZ());
+        
+        return this;
     }
 
-    public void add(double x, double y, double z) {
+    public Vector add(double x, double y, double z) {
         setX(getX() + x);
         setY(getY() + y);
         setZ(getZ() + z);
+        
+        return this;
     }
 
-    public void subtract(Vector vector) {
+    public Vector subtract(Vector vector) {
         setX(getX() - vector.getX());
         setY(getY() - vector.getY());
         setZ(getZ() - vector.getZ());
+        
+        return this;
     }
 
-    public void subtract(double x, double y, double z) {
+    public Vector subtract(double x, double y, double z) {
         setX(getX() - x);
         setY(getY() - y);
         setZ(getZ() - z);
+        
+        return this;
     }
     
     public Vector scale(double scalar) {
         setX(getX() * scalar);
         setY(getY() * scalar);
         setZ(getZ() * scalar);
+
         return this;
     }
 
