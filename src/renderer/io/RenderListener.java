@@ -38,7 +38,6 @@ public class RenderListener {
     private final MouseMotionListener mouseMotionListener = new MouseMotionAdapter() {
         @Override
         public void mouseMoved(MouseEvent e) {
-            mousePos.set(e.getX(), e.getY());
             
             callBinding(EventCode.EventType.MOUSE_MOVED);
         }

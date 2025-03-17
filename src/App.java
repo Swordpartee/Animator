@@ -1,6 +1,7 @@
 import java.awt.Color;
 
 import controller.CameraController;
+import javax.naming.ldap.UnsolicitedNotificationListener;
 import renderer.display.Renderer;
 import renderer.io.EventCode;
 import renderer.io.RenderListener;
@@ -17,6 +18,7 @@ public class App {
     static AxisBox cube2;
     static AxisBox cube3;
 
+    static double curMousePos = 0;
 
     public static void main(String[] args) {
         camera = new CameraController();
@@ -45,14 +47,12 @@ public class App {
         renderer.add(new Axis());
 
         renderer.start();
-
+        
     }
     
     public static void update() {
-        if (listener.isKeyPressed(EventCode.Q)) {
-            double rotationAngle = (listener.getMousePos().getX() / 400) * 360;
-            camera.rotateOnPlane(rotationAngle);
-        }
+        camera.getTarget().setX(renderer.getMousePosition().getX());
+        camera.getTarget().setY(renderer.getMousePosition().getY());
         if (listener.isKeyPressed(EventCode.W)) {
             camera.moveForwardOnPlane(0.1);
         }
@@ -65,10 +65,10 @@ public class App {
         if (listener.isKeyPressed(EventCode.D)) {
             camera.moveLeftOnPlane(-0.1);
         }
-        if (listener.isKeyPressed(EventCode.R)) {
+        if (listener.isKeyPressed(EventCode.RIGHT)) {
             camera.rotateOnPlane(0.5);
         }
-        if (listener.isKeyPressed(EventCode.E)) {
+        if (listener.isKeyPressed(EventCode.LEFT)) {
             camera.rotateOnPlane(-0.5);
         }
     }
