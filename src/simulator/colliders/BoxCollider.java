@@ -1,5 +1,6 @@
 package simulator.colliders;
 
+import util.Functions;
 import util.Vector;
 import util.shapes.Box;
 
@@ -34,9 +35,9 @@ public class BoxCollider extends Box implements Collider {
     }
 
     private boolean collidesWithBox(BoxCollider other) {
-        double dx = Math.abs(this.getX() - other.getX()) - (this.getWidth() + other.getWidth()) / 2;
-        double dy = Math.abs(this.getY() - other.getY()) - (this.getHeight() + other.getHeight()) / 2;
-        double dz = Math.abs(this.getZ() - other.getZ()) - (this.getDepth() + other.getDepth()) / 2;
+        double dx = Functions.abs(this.getX() - other.getX()) - (this.getWidth() + other.getWidth()) / 2;
+        double dy = Functions.abs(this.getY() - other.getY()) - (this.getHeight() + other.getHeight()) / 2;
+        double dz = Functions.abs(this.getZ() - other.getZ()) - (this.getDepth() + other.getDepth()) / 2;
         return dx < 0 && dy < 0 && dz < 0;
     }
 

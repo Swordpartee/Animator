@@ -21,6 +21,12 @@ public class Axis implements Renderable {
     }
 
     @Override
+    public void setPos(double x, double y, double z) {}
+
+    @Override
+    public void setPos(Vector pos) {}
+
+    @Override
     public void paint(RenderGraphic g) {
         Vector origin = new Vector();
         Vector x = new Vector(length, 0, 0);

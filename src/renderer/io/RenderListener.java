@@ -2,22 +2,17 @@ package renderer.io;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import util.Vector;
 
 public class RenderListener {
-    private final MouseListener mouseListener = new MouseAdapter() {
+    private final MouseAdapter mouseListener = new MouseAdapter() {
         @Override
         public void mousePressed(MouseEvent e) {
             if (mouseEvents[e.getButton()] == null) {  
@@ -33,18 +28,17 @@ public class RenderListener {
 
             callBinding(EventCode.EventType.KEY_RELEASED, e.getButton());
         }
-    };
 
-    private final MouseMotionListener mouseMotionListener = new MouseMotionAdapter() {
         @Override
         public void mouseMoved(MouseEvent e) {
-            
+            mousePos.setX(e.getPoint().getX() - 400 + 8);
+            mousePos.setY(e.getPoint().getY() - 300 + 31);
+
             callBinding(EventCode.EventType.MOUSE_MOVED);
         }
-
     };
 
-    private final KeyListener keyListener = new KeyAdapter() {
+    private final KeyAdapter keyListener = new KeyAdapter() {
         @Override
         public void keyPressed(KeyEvent e) {
             if (keyEvents[e.getKeyCode()] == null) {
@@ -63,7 +57,7 @@ public class RenderListener {
         }
     };
 
-    private final WindowListener windowListener = new WindowAdapter() {
+    private final WindowAdapter windowListener = new WindowAdapter() {
         @Override
         public void windowClosed(WindowEvent e) {
             callBinding(EventCode.EventType.WINDOW_CLOSED);
@@ -76,20 +70,16 @@ public class RenderListener {
         }
     };
     
-    public MouseListener getMouseListener() {
+    public MouseAdapter getMouseListener() {
         return mouseListener;
     }
 
-    public KeyListener getKeyListener() {
+    public KeyAdapter getKeyListener() {
         return keyListener;
     }
 
-    public WindowListener getWindowListener() {
+    public WindowAdapter getWindowListener() {
         return windowListener;
-    }
-    
-    public MouseMotionListener getMouseMotionListener() {
-        return mouseMotionListener;
     }
 
     private final List<Binding> bindings = new ArrayList<>();
@@ -122,7 +112,6 @@ public class RenderListener {
     public void addBinding(EventCode.EventType eventType, EventCode code, Runnable action) {
         bindings.add(new Binding(eventType, code, action));
     }
-
 
     public void addBinding(Binding binding) {
         bindings.add(binding);

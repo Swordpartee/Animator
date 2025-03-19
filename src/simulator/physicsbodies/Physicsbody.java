@@ -21,4 +21,6 @@ public interface Physicsbody {
     public void updatePos();
 
     public void updateCollision(Physicsbody[] bodies);
+
+    public void update(Physicsbody[] bodies);
 }

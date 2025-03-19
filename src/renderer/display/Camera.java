@@ -13,7 +13,8 @@ public class Camera {
     private double near;
     private double far;
 
-    public Camera(double x, double y, double z, double targetX, double targetY, double targetZ, double fov, double aspect, double near, double far) {
+    public Camera(double x, double y, double z, double targetX, double targetY, double targetZ, double fov,
+            double aspect, double near, double far) {
         position = new Vector(x, y, z);
         target = new Vector(targetX, targetY, targetZ);
         this.fov = fov;
@@ -21,7 +22,7 @@ public class Camera {
         this.near = near;
         this.far = far;
     }
-    
+
     public Camera() {
         this(10, 10, 10, 0, 0, 0, 90, 1, 0.1, 1000);
     }
@@ -48,53 +49,81 @@ public class Camera {
 
     public void setFar(double far) {
         this.far = far;
-        }
+    }
 
-    public boolean inFrame(Vector coords) {
-        // if (coords.getZ() <= near || coords.getZ() >= far) {
-        //     return false;
-        // }
-        
-        // return coords.getX() >= -400 && coords.getX() <= 400 &&
-        //         coords.getY() >= -300 && coords.getY() <= 300;
+    // public boolean inFrame(Vector coords) {
+    //     if (coords.getZ() <= near || coords.getZ() >= far) {
+    //         return false;
+    //     }
 
-        return true;
-            
-        }
+    //     // return coords.getX() >= -400 && coords.getX() <= 400 &&
+    //     //         coords.getY() >= -300 && coords.getY() <= 300;
+
+    //     return true;
+
+    // }
+
+    // Add this method to your Camera class
+    public boolean isInFrontOfCamera(Vector point) {
+        Vector viewVector = Functions.subtractVectors(target, position).normalize();
+        Vector pointVector = Functions.subtractVectors(point, position);
+
+        // Calculate dot product to determine if point is in front of camera
+        double dotProduct = Functions.getDotProduct(viewVector, pointVector);
+
+        // If dot product is positive, the point is in front of camera
+        return dotProduct > 0;
+    }
 
     private Vector applyViewMatrix(Vector coords) {
         Vector result = new Vector();
-        result.setX(coords.getX() * viewMatrix[0][0] + coords.getY() * viewMatrix[0][1] + coords.getZ() * viewMatrix[0][2] + coords.getW() * viewMatrix[0][3]);
-        result.setY(coords.getX() * viewMatrix[1][0] + coords.getY() * viewMatrix[1][1] + coords.getZ() * viewMatrix[1][2] + coords.getW() * viewMatrix[1][3]);
-        result.setZ(coords.getX() * viewMatrix[2][0] + coords.getY() * viewMatrix[2][1] + coords.getZ() * viewMatrix[2][2] + coords.getW() * viewMatrix[2][3]);
-        result.setW(coords.getX() * viewMatrix[3][0] + coords.getY() * viewMatrix[3][1] + coords.getZ() * viewMatrix[3][2] + coords.getW() * viewMatrix[3][3]);
+        result.setX(coords.getX() * viewMatrix[0][0] + coords.getY() * viewMatrix[0][1]
+                + coords.getZ() * viewMatrix[0][2] + coords.getW() * viewMatrix[0][3]);
+        result.setY(coords.getX() * viewMatrix[1][0] + coords.getY() * viewMatrix[1][1]
+                + coords.getZ() * viewMatrix[1][2] + coords.getW() * viewMatrix[1][3]);
+        result.setZ(coords.getX() * viewMatrix[2][0] + coords.getY() * viewMatrix[2][1]
+                + coords.getZ() * viewMatrix[2][2] + coords.getW() * viewMatrix[2][3]);
+        result.setW(coords.getX() * viewMatrix[3][0] + coords.getY() * viewMatrix[3][1]
+                + coords.getZ() * viewMatrix[3][2] + coords.getW() * viewMatrix[3][3]);
         return result;
     }
 
     private Vector applyProjectionMatrix(Vector coords) {
         Vector result = new Vector();
-        result.setX(coords.getX() * projectionMatrix[0][0] + coords.getY() * projectionMatrix[0][1] + coords.getZ() * projectionMatrix[0][2] + coords.getW() * projectionMatrix[0][3]);
-        result.setY(coords.getX() * projectionMatrix[1][0] + coords.getY() * projectionMatrix[1][1] + coords.getZ() * projectionMatrix[1][2] + coords.getW() * projectionMatrix[1][3]);
-        result.setZ(coords.getX() * projectionMatrix[2][0] + coords.getY() * projectionMatrix[2][1] + coords.getZ() * projectionMatrix[2][2] + coords.getW() * projectionMatrix[2][3]);
-        result.setW(coords.getX() * projectionMatrix[3][0] + coords.getY() * projectionMatrix[3][1] + coords.getZ() * projectionMatrix[3][2] + coords.getW() * projectionMatrix[3][3]);
+        result.setX(coords.getX() * projectionMatrix[0][0] + coords.getY() * projectionMatrix[0][1]
+                + coords.getZ() * projectionMatrix[0][2] + coords.getW() * projectionMatrix[0][3]);
+        result.setY(coords.getX() * projectionMatrix[1][0] + coords.getY() * projectionMatrix[1][1]
+                + coords.getZ() * projectionMatrix[1][2] + coords.getW() * projectionMatrix[1][3]);
+        result.setZ(coords.getX() * projectionMatrix[2][0] + coords.getY() * projectionMatrix[2][1]
+                + coords.getZ() * projectionMatrix[2][2] + coords.getW() * projectionMatrix[2][3]);
+        result.setW(coords.getX() * projectionMatrix[3][0] + coords.getY() * projectionMatrix[3][1]
+                + coords.getZ() * projectionMatrix[3][2] + coords.getW() * projectionMatrix[3][3]);
         return result;
     }
 
     private Vector applyInverseViewMatrix(Vector coords) {
         Vector result = new Vector();
-        result.setX(coords.getX() * viewMatrix[0][0] + coords.getY() * viewMatrix[1][0] + coords.getZ() * viewMatrix[2][0] + coords.getW() * viewMatrix[3][0]);
-        result.setY(coords.getX() * viewMatrix[0][1] + coords.getY() * viewMatrix[1][1] + coords.getZ() * viewMatrix[2][1] + coords.getW() * viewMatrix[3][1]);
-        result.setZ(coords.getX() * viewMatrix[0][2] + coords.getY() * viewMatrix[1][2] + coords.getZ() * viewMatrix[2][2] + coords.getW() * viewMatrix[3][2]);
-        result.setW(coords.getX() * viewMatrix[0][3] + coords.getY() * viewMatrix[1][3] + coords.getZ() * viewMatrix[2][3] + coords.getW() * viewMatrix[3][3]);
+        result.setX(coords.getX() * viewMatrix[0][0] + coords.getY() * viewMatrix[1][0]
+                + coords.getZ() * viewMatrix[2][0] + coords.getW() * viewMatrix[3][0]);
+        result.setY(coords.getX() * viewMatrix[0][1] + coords.getY() * viewMatrix[1][1]
+                + coords.getZ() * viewMatrix[2][1] + coords.getW() * viewMatrix[3][1]);
+        result.setZ(coords.getX() * viewMatrix[0][2] + coords.getY() * viewMatrix[1][2]
+                + coords.getZ() * viewMatrix[2][2] + coords.getW() * viewMatrix[3][2]);
+        result.setW(coords.getX() * viewMatrix[0][3] + coords.getY() * viewMatrix[1][3]
+                + coords.getZ() * viewMatrix[2][3] + coords.getW() * viewMatrix[3][3]);
         return result;
     }
 
     private Vector applyInverseProjectionMatrix(Vector coords) {
         Vector result = new Vector();
-        result.setX(coords.getX() * projectionMatrix[0][0] + coords.getY() * projectionMatrix[1][0] + coords.getZ() * projectionMatrix[2][0] + coords.getW() * projectionMatrix[3][0]);
-        result.setY(coords.getX() * projectionMatrix[0][1] + coords.getY() * projectionMatrix[1][1] + coords.getZ() * projectionMatrix[2][1] + coords.getW() * projectionMatrix[3][1]);
-        result.setZ(coords.getX() * projectionMatrix[0][2] + coords.getY() * projectionMatrix[1][2] + coords.getZ() * projectionMatrix[2][2] + coords.getW() * projectionMatrix[3][2]);
-        result.setW(coords.getX() * projectionMatrix[0][3] + coords.getY() * projectionMatrix[1][3] + coords.getZ() * projectionMatrix[2][3] + coords.getW() * projectionMatrix[3][3]);
+        result.setX(coords.getX() * projectionMatrix[0][0] + coords.getY() * projectionMatrix[1][0]
+                + coords.getZ() * projectionMatrix[2][0] + coords.getW() * projectionMatrix[3][0]);
+        result.setY(coords.getX() * projectionMatrix[0][1] + coords.getY() * projectionMatrix[1][1]
+                + coords.getZ() * projectionMatrix[2][1] + coords.getW() * projectionMatrix[3][1]);
+        result.setZ(coords.getX() * projectionMatrix[0][2] + coords.getY() * projectionMatrix[1][2]
+                + coords.getZ() * projectionMatrix[2][2] + coords.getW() * projectionMatrix[3][2]);
+        result.setW(coords.getX() * projectionMatrix[0][3] + coords.getY() * projectionMatrix[1][3]
+                + coords.getZ() * projectionMatrix[2][3] + coords.getW() * projectionMatrix[3][3]);
         return result;
     }
 

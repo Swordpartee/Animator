@@ -24,6 +24,16 @@ public class AxisBox extends Box implements Renderable {
     }
 
     @Override
+    public void setPos(double x, double y, double z) {
+        set(x, y, z);
+    }
+
+    @Override
+    public void setPos(Vector pos) {
+        set(pos);
+    }
+
+    @Override
     public void paint(RenderGraphic g) {
         Vector min = super.getMin();
         Vector max = super.getMax();

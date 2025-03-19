@@ -33,9 +33,9 @@ public class Renderer extends Frame {
         this.camera = camera;
         this.listener = listener;
 
-        addListener(listener);
-
         initScreen();
+        
+        addListener(listener);
     }
 
     public Renderer(Runnable updateFunction) {
@@ -58,7 +58,6 @@ public class Renderer extends Frame {
         setSize(800, 600);
         setTitle("Renderer");
 
-
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -72,14 +71,20 @@ public class Renderer extends Frame {
     private void addListener(RenderListener listener) {
         addKeyListener(listener.getKeyListener());
         addMouseListener(listener.getMouseListener());
-        addMouseMotionListener(listener.getMouseMotionListener());
+        addMouseMotionListener(listener.getMouseListener());
         addWindowListener(listener.getWindowListener());
+
+        canvas.addKeyListener(listener.getKeyListener());
+        canvas.addMouseListener(listener.getMouseListener());
+        canvas.addMouseMotionListener(listener.getMouseListener());
+        
     }
     
     public Renderable add(Renderable renderable) {
         renderables.add(renderable);
         return renderable;
     }
+    
 
     public Camera getCamera() {
         return camera;
@@ -100,7 +105,10 @@ public class Renderer extends Frame {
         graphics.getGraphics().clearRect(0, 0, getWidth(), getHeight());
 
         // update and render display
-        updateFunction.run();
+        // listener.updateMousePos(Optional.ofNullable(getMousePosition()));
+
+        try {updateFunction.run();} catch (Exception e) {throw e;}
+
         camera.update();
         renderables.forEach(r -> r.paint(graphics));
 
@@ -111,6 +119,7 @@ public class Renderer extends Frame {
     }
     
     public void start() {
+        canvas.requestFocus();
         itterator.scheduleAtFixedRate(() -> repaint(), 0, FRAME_DURATION, java.util.concurrent.TimeUnit.MILLISECONDS);
     }
 }

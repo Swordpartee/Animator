@@ -1,5 +1,7 @@
 package util;
 
+import java.awt.Point;
+
 public class Vector {
     private double x;
     private double y;
@@ -17,7 +19,6 @@ public class Vector {
         this.w = w;
     }
 
-
     public Vector() {
         this(0, 0, 0, 1);
     }
@@ -32,6 +33,13 @@ public class Vector {
         this.y = vector.y;
         this.z = vector.z;
         this.w = vector.w;
+    }
+
+    public Vector(Point point) {
+        this.x = point.getX();
+        this.y = point.getY();
+        this.z = 0;
+        this.w = 1;
     }
 
     public Vector get() {
@@ -180,6 +188,40 @@ public class Vector {
     public Vector scale(double scalar) {
         setX(getX() * scalar);
         setY(getY() * scalar);
+        setZ(getZ() * scalar);
+
+        return this;
+    }
+
+    public Vector scale(double scalarX, double scalarY, double scalarZ) {
+        setX(getX() * scalarX);
+        setY(getY() * scalarY);
+        setZ(getZ() * scalarZ);
+
+        return this;
+    }
+
+    public Vector scale(Vector scalar) {
+        setX(getX() * scalar.getX());
+        setY(getY() * scalar.getY());
+        setZ(getZ() * scalar.getZ());
+
+        return this;
+    }
+
+    public Vector scaleX(double scalar) {
+        setX(getX() * scalar);
+
+        return this;
+    }
+    
+    public Vector scaleY(double scalar) {
+        setY(getY() * scalar);
+
+        return this;
+    }
+
+    public Vector scaleZ(double scalar) {
         setZ(getZ() * scalar);
 
         return this;

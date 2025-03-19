@@ -20,10 +20,12 @@ public class RenderGraphic {
     public void drawLine(Vector p1, Vector p2) {
         Vector screenP1 = camera.toScreenCoords(p1);
         Vector screenP2 = camera.toScreenCoords(p2);
-        
-        if (camera.inFrame(screenP2) && camera.inFrame(screenP1)) {
-            graphics.drawLine((int) screenP1.getX(), (int) screenP1.getY(), (int) screenP2.getX(), (int) screenP2.getY());
+
+        if (!camera.isInFrontOfCamera(p1) && !camera.isInFrontOfCamera(p2)) {
+            return;
         }
+        
+        graphics.drawLine((int) screenP1.getX(), (int) screenP1.getY(), (int) screenP2.getX(), (int) screenP2.getY());
     }
 
     public void setColor(java.awt.Color color) {

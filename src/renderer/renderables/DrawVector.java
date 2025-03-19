@@ -20,6 +20,16 @@ public class DrawVector extends Vector implements Renderable {
     }
 
     @Override
+    public void setPos(double x, double y, double z) {
+        set(x, y, z);
+    }
+
+    @Override
+    public void setPos(Vector pos) {
+        set(pos);
+    }
+
+    @Override
     public void paint(RenderGraphic graphics) {
         graphics.setColor(color);
         graphics.drawLine(new Vector(), this);

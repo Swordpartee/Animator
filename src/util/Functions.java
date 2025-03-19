@@ -2,7 +2,19 @@ package util;
 
 public class Functions {
     public static double clamp(double value, double min, double max) {
-            return value < min ? min : value > max ? max : value;
+        return value < min ? min : value > max ? max : value;
+    }
+
+    public static double setMax(double value, double max) {
+        return value > max ? max : value;
+    }
+
+    public static double setMin(double value, double min) {
+        return value < min ? min : value;
+    }
+    
+    public static double abs(double value) {
+        return value < 0 ? -value : value;
     }
 
     public static Vector addVectors(Vector vector1, Vector vector2) {
@@ -44,8 +56,12 @@ public class Functions {
         return scaleVector(vector, 1 / vector.getMagnitude());
     }
 
-    public static double pow(double d, int pow) {
-        return java.lang.Math.pow(d, pow);
+    public static double keepSignPow(double base, double exponent) {
+        return base * java.lang.Math.pow(java.lang.Math.abs(base), exponent - 1);
+    }
+
+    public static double pow(double base, int exponent) {
+        return java.lang.Math.pow(base, exponent);
     }
 
     public static double sqrt(double d) {
@@ -65,7 +81,7 @@ public class Functions {
     }
 
     public static double atan2(double y, double x) {
-        return java.lang.Math.atan2(java.lang.Math.toRadians(y), java.lang.Math.toRadians(x));
+        return java.lang.Math.toDegrees(java.lang.Math.atan2(y, x));
     }
 
     public static double toRadians(double d) {

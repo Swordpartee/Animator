@@ -1,7 +1,12 @@
 import java.awt.Color;
 
 import controller.CameraController;
-import javax.naming.ldap.UnsolicitedNotificationListener;
+import java.awt.AWTException;
+import java.awt.Cursor;
+import java.awt.Point;
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import renderer.display.Renderer;
 import renderer.io.EventCode;
 import renderer.io.RenderListener;
@@ -10,26 +15,52 @@ import renderer.renderables.AxisBox;
 import renderer.renderables.DrawVector;
 
 public class App {  
-    static Renderer renderer;
-    static CameraController camera;
-    static RenderListener listener;
-    
-    static AxisBox cube1;
-    static AxisBox cube2;
-    static AxisBox cube3;
+    private static Renderer renderer;
+    private static CameraController camera;
+    private static RenderListener listener;
+    private static Robot robot;
 
-    static double curMousePos = 0;
+    private static AxisBox cube1;
+    private static AxisBox cube2;
+    private static AxisBox cube3;
+
+    private static boolean cursorLocked = false;
+    private static boolean isJustLocked = false;
 
     public static void main(String[] args) {
         camera = new CameraController();
         listener = new RenderListener();
         renderer = new Renderer(() -> update(), camera, listener);
 
-        camera.getPosition().set(0, 5, 20);
+        camera.getPosition().set(0, 2, 3);
+        camera.setFOV(120);
 
         listener.addBinding(EventCode.EventType.KEY_PRESSED, EventCode.SPACE, () -> {
             camera.getPosition().moveY(0.1);
             camera.getTarget().moveY(0.1);
+        });
+
+        listener.addBinding(EventCode.EventType.KEY_PRESSED, EventCode.Q, () -> {
+            cursorLocked = !cursorLocked;
+            isJustLocked = true;
+            if (cursorLocked) {
+                renderer.setCursor(getInvisCursor());
+                centerCursor();
+            } else {
+                renderer.setCursor(new Cursor(0));
+            }
+        });
+
+        listener.addBinding(EventCode.EventType.MOUSE_MOVED, EventCode.MOUSE_MOVED, () -> {
+            if (cursorLocked) {
+                if (isJustLocked) {
+                    isJustLocked = false;
+                } else {
+                    camera.rotateRightOnPlane(-listener.getMousePos().getX() * 0.1);
+                    camera.rotateUp(-listener.getMousePos().getY() * 0.1);
+                    centerCursor();
+                }
+            }
         });
 
         cube1 = new AxisBox(0, 0, 0, 3, 0.5, 0.5, Color.cyan);
@@ -47,29 +78,29 @@ public class App {
         renderer.add(new Axis());
 
         renderer.start();
-        
+
+        try {
+            robot = new Robot();
+        } catch (AWTException e) {
+        }
+
     }
     
-    public static void update() {
-        camera.getTarget().setX(renderer.getMousePosition().getX());
-        camera.getTarget().setY(renderer.getMousePosition().getY());
-        if (listener.isKeyPressed(EventCode.W)) {
-            camera.moveForwardOnPlane(0.1);
+    private static Cursor getInvisCursor() {
+        BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+        return Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "invisible");
+    }
+
+    private static void centerCursor() {
+        if (robot != null) {
+            // Move cursor to center
+            robot.mouseMove(400, 300);
         }
-        if (listener.isKeyPressed(EventCode.S)) {
-            camera.moveForwardOnPlane(-0.1);
-        }
-        if (listener.isKeyPressed(EventCode.A)) {
-            camera.moveLeftOnPlane(0.1);
-        }
-        if (listener.isKeyPressed(EventCode.D)) {
-            camera.moveLeftOnPlane(-0.1);
-        }
-        if (listener.isKeyPressed(EventCode.RIGHT)) {
-            camera.rotateOnPlane(0.5);
-        }
-        if (listener.isKeyPressed(EventCode.LEFT)) {
-            camera.rotateOnPlane(-0.5);
-        }
+    }
+    
+    private static void update() {
+        camera.move(listener);
+
+        System.out.println(listener.getMousePos());
     }
 }

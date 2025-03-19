@@ -51,6 +51,17 @@ public class Rigidbody implements Physicsbody {
         velocity.add(x, y, z);
     }
 
+    public void applyVelocity() {
+        collider.getPos().add(velocity);
+    }
+
+    @Override
+    public void update(Physicsbody[] bodies) {
+        applyVelocity();
+        updateCollision(bodies);
+
+    }
+
     @Override
     public void updatePos() {
         collider.getPos().add(velocity);
