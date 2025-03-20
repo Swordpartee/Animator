@@ -15,7 +15,7 @@ import renderer.renderables.AxisBox;
 import renderer.renderables.Crosshair;
 import renderer.renderables.DrawVector;
 
-public class App {  
+public class App {
     private static Renderer renderer;
     private static CameraController playerController;
     private static RenderListener listener;
@@ -33,13 +33,6 @@ public class App {
         listener = new RenderListener();
         renderer = new Renderer(() -> update(), playerController, listener);
 
-        playerController.getPosition().set(0, 2, 3);
-        playerController.setFOV(120);
-
-        listener.addBinding(EventCode.EventType.KEY_PRESSED, EventCode.SPACE, () -> {
-            playerController.moveUp(0.1);
-        });
-
         listener.addBinding(EventCode.EventType.KEY_PRESSED, EventCode.Q, () -> {
             cursorLocked = !cursorLocked;
             isJustLocked = true;
@@ -49,19 +42,6 @@ public class App {
                 robot.mouseMove(renderer.getWidth() / 2, renderer.getHeight() / 2);
             } else {
                 renderer.setCursor(new Cursor(0));
-            }
-        });
-
-        listener.addBinding(EventCode.EventType.MOUSE_MOVED, EventCode.MOUSE_MOVED, () -> {
-            if (cursorLocked) {
-                if (isJustLocked) {
-                    isJustLocked = false;
-                } else {
-                    playerController.rotateRightOnPlane(-listener.getMousePos().getX() * 0.1);
-                    playerController.rotateUp(-listener.getMousePos().getY() * 0.1);
-                    
-                    robot.mouseMove(renderer.getWidth() / 2, renderer.getHeight() / 2);
-                }
             }
         });
 
@@ -93,8 +73,19 @@ public class App {
         BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
         return Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "invisible");
     }
-    
+
     private static void update() {
         playerController.move(listener);
+
+        if (cursorLocked) {
+            if (isJustLocked) {
+                isJustLocked = false;
+            } else {
+                playerController.rotateRightOnPlane(-listener.getMousePos().getX() * 0.1);
+                playerController.rotateUp(-listener.getMousePos().getY() * 0.1);
+                
+                robot.mouseMove(renderer.getWidth() / 2, renderer.getHeight() / 2);
+            }
+        }
     }
 }

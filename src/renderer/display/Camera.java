@@ -23,7 +23,7 @@ public class Camera {
     }
 
     public Camera() {
-        this(10, 10, 10, 0, 0, 0, 90, 1, 0.1, 1000);
+        this(10, 10, 10, 0, 0, 0, 120, 1, 0.1, 1000);
     }
 
     public Vector getPosition() {
