@@ -12,11 +12,12 @@ import renderer.io.EventCode;
 import renderer.io.RenderListener;
 import renderer.renderables.Axis;
 import renderer.renderables.AxisBox;
+import renderer.renderables.Crosshair;
 import renderer.renderables.DrawVector;
 
 public class App {  
     private static Renderer renderer;
-    private static CameraController camera;
+    private static CameraController playerController;
     private static RenderListener listener;
     private static Robot robot;
 
@@ -28,16 +29,15 @@ public class App {
     private static boolean isJustLocked = false;
 
     public static void main(String[] args) {
-        camera = new CameraController();
+        playerController = new CameraController();
         listener = new RenderListener();
-        renderer = new Renderer(() -> update(), camera, listener);
+        renderer = new Renderer(() -> update(), playerController, listener);
 
-        camera.getPosition().set(0, 2, 3);
-        camera.setFOV(120);
+        playerController.getPosition().set(0, 2, 3);
+        playerController.setFOV(120);
 
         listener.addBinding(EventCode.EventType.KEY_PRESSED, EventCode.SPACE, () -> {
-            camera.getPosition().moveY(0.1);
-            camera.getTarget().moveY(0.1);
+            playerController.moveUp(0.1);
         });
 
         listener.addBinding(EventCode.EventType.KEY_PRESSED, EventCode.Q, () -> {
@@ -45,7 +45,8 @@ public class App {
             isJustLocked = true;
             if (cursorLocked) {
                 renderer.setCursor(getInvisCursor());
-                centerCursor();
+                    
+                robot.mouseMove(renderer.getWidth() / 2, renderer.getHeight() / 2);
             } else {
                 renderer.setCursor(new Cursor(0));
             }
@@ -56,9 +57,10 @@ public class App {
                 if (isJustLocked) {
                     isJustLocked = false;
                 } else {
-                    camera.rotateRightOnPlane(-listener.getMousePos().getX() * 0.1);
-                    camera.rotateUp(-listener.getMousePos().getY() * 0.1);
-                    centerCursor();
+                    playerController.rotateRightOnPlane(-listener.getMousePos().getX() * 0.1);
+                    playerController.rotateUp(-listener.getMousePos().getY() * 0.1);
+                    
+                    robot.mouseMove(renderer.getWidth() / 2, renderer.getHeight() / 2);
                 }
             }
         });
@@ -77,12 +79,13 @@ public class App {
 
         renderer.add(new Axis());
 
+        renderer.add(new Crosshair(800, 600));
+
         renderer.start();
 
         try {
             robot = new Robot();
-        } catch (AWTException e) {
-        }
+        } catch (AWTException e) {}
 
     }
     
@@ -90,17 +93,8 @@ public class App {
         BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
         return Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "invisible");
     }
-
-    private static void centerCursor() {
-        if (robot != null) {
-            // Move cursor to center
-            robot.mouseMove(400, 300);
-        }
-    }
     
     private static void update() {
-        camera.move(listener);
-
-        System.out.println(listener.getMousePos());
+        playerController.move(listener);
     }
 }

@@ -13,8 +13,7 @@ public class Camera {
     private double near;
     private double far;
 
-    public Camera(double x, double y, double z, double targetX, double targetY, double targetZ, double fov,
-            double aspect, double near, double far) {
+    public Camera(double x, double y, double z, double targetX, double targetY, double targetZ, double fov, double aspect, double near, double far) {
         position = new Vector(x, y, z);
         target = new Vector(targetX, targetY, targetZ);
         this.fov = fov;
@@ -50,18 +49,6 @@ public class Camera {
     public void setFar(double far) {
         this.far = far;
     }
-
-    // public boolean inFrame(Vector coords) {
-    //     if (coords.getZ() <= near || coords.getZ() >= far) {
-    //         return false;
-    //     }
-
-    //     // return coords.getX() >= -400 && coords.getX() <= 400 &&
-    //     //         coords.getY() >= -300 && coords.getY() <= 300;
-
-    //     return true;
-
-    // }
 
     // Add this method to your Camera class
     public boolean isInFrontOfCamera(Vector point) {

@@ -100,17 +100,14 @@ public class Renderer extends Frame {
 
     @Override
     public void repaint() {
-        // get graphics and clear screen
+        // get graphics
         RenderGraphic graphics = getRenderGraphic();
-        graphics.getGraphics().clearRect(0, 0, getWidth(), getHeight());
 
         // update and render display
-        // listener.updateMousePos(Optional.ofNullable(getMousePosition()));
-
         try {updateFunction.run();} catch (Exception e) {throw e;}
-
         camera.update();
         renderables.forEach(r -> r.paint(graphics));
+        graphics.render();
 
         // dispose graphics and show display
         graphics.getGraphics().dispose();
@@ -120,6 +117,6 @@ public class Renderer extends Frame {
     
     public void start() {
         canvas.requestFocus();
-        itterator.scheduleAtFixedRate(() -> repaint(), 0, FRAME_DURATION, java.util.concurrent.TimeUnit.MILLISECONDS);
+        itterator.scheduleAtFixedRate(() -> {try {repaint();} catch (Exception e) {throw e;}}, 0, FRAME_DURATION, java.util.concurrent.TimeUnit.MILLISECONDS);
     }
 }
