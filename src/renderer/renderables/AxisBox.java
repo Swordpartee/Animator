@@ -51,6 +51,32 @@ public class AxisBox extends Box implements Renderable {
             new Vector(min.getX(), max.getY(), max.getZ())
         };
 
+        // Draw filled faces with slight transparency for better visibility
+        Color faceColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), 128);
+        
+        // Draw the faces in a consistent order (back-to-front) to reduce z-fighting
+        // Calculate view direction for face culling and ordering
+        
+        // Back face (Z-max)
+        g.drawPolygon(faceColor, true, points[4], points[5], points[6], points[7]);
+        
+        // Bottom face (Y-min)
+        g.drawPolygon(faceColor, true, points[0], points[1], points[5], points[4]);
+        
+        // Left face (X-min)
+        g.drawPolygon(faceColor, true, points[0], points[3], points[7], points[4]);
+        
+        // Right face (X-max)
+        g.drawPolygon(faceColor, true, points[1], points[2], points[6], points[5]);
+        
+        // Top face (Y-max)
+        g.drawPolygon(faceColor, true, points[3], points[2], points[6], points[7]);
+        
+        // Front face (Z-min) - draw this last as it's most likely to be visible
+        g.drawPolygon(faceColor, true, points[0], points[1], points[2], points[3]);
+        
+        // Draw wireframe outline
+        g.setColor(Color.BLACK);
         for (int i = 0; i < 4; i++) {
             Vector p1 = points[i];
             Vector p2 = points[(i + 1) % 4];

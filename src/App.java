@@ -45,14 +45,28 @@ public class App {
             }
         });
 
-        cube1 = new AxisBox(0, 0, 0, 3, 0.5, 0.5, Color.cyan);
+        cube1 = new AxisBox(0, -1, 1, 3, 0.5, 0.5, Color.cyan);
         renderer.add(cube1);
 
-        cube2 = new AxisBox(0, 0, 0, 0.5, 4, 1, Color.pink);
+        cube2 = new AxisBox(-2, 0, 0, 0.5, 4, 1, Color.pink);
         renderer.add(cube2);
 
         cube3 = new AxisBox(0, 0, 0, 1, 0.5, 4, Color.yellow);
         renderer.add(cube3);
+
+        // // Adding a floor made of cubes
+        // for (int x = -5; x <= 5; x++) {
+        //     for (int z = -5; z <= 5; z++) {
+        //         AxisBox floorTile = new AxisBox(x, -2, z, 1, 0.1, 1, Color.green);
+        //         renderer.add(floorTile);
+        //     }
+        // }
+
+        // Adding steps made of cubes
+        for (int i = 0; i < 5; i++) {
+            AxisBox step = new AxisBox(i, -1 + i * 0.5, i, 1, 0.5, 1, Color.gray);
+            renderer.add(step);
+        }
 
         DrawVector vector = new DrawVector(1, 3, 2, Color.black);
         renderer.add(vector);

@@ -235,6 +235,18 @@ public class Vector {
         return scale(1 / getMagnitude());
     }
 
+    /**
+     * Calculate the Euclidean distance between this vector and another vector.
+     * @param other The other vector to calculate distance to
+     * @return The distance between the two vectors
+     */
+    public double distance(Vector other) {
+        double dx = this.x - other.x;
+        double dy = this.y - other.y;
+        double dz = this.z - other.z;
+        return Math.sqrt(dx * dx + dy * dy + dz * dz);
+    }
+
     @Override
     public String toString() {
         return "Vector - (" + x + ", " + y + ", " + z + ")";

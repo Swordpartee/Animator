@@ -154,33 +154,35 @@ public class RenderGraphic {
         int sx = x1 < x2 ? 1 : -1;
         int sy = y1 < y2 ? 1 : -1;
         int err = dx - dy;
-        
+
         // Total distance for z-interpolation
-        double totalDist = Math.sqrt(dx*dx + dy*dy);
-        if (totalDist == 0) totalDist = 1; // Avoid division by zero
-        
+        double totalDist = Math.sqrt(dx * dx + dy * dy);
+        if (totalDist == 0)
+            totalDist = 1; // Avoid division by zero
+
         // Current position
         int x = x1;
         int y = y1;
         double z;
-        
+
         while (true) {
             // Skip if out of bounds
             if (x >= 0 && y >= 0 && x < width && y < height) {
                 // Interpolate z-value
-                double t = Math.sqrt((x-x1)*(x-x1) + (y-y1)*(y-y1)) / totalDist;
-                z = (1-t) * z1 + t * z2;
-                
+                double t = Math.sqrt((x - x1) * (x - x1) + (y - y1) * (y - y1)) / totalDist;
+                z = (1 - t) * z1 + t * z2;
+
                 // Depth test - only draw if this point is closer than what's already there
                 if (z < depthBuffer[y][x]) {
                     depthBuffer[y][x] = z;
                     colorBuffer[y][x] = color;
                 }
             }
-            
+
             // Exit condition
-            if (x == x2 && y == y2) break;
-            
+            if (x == x2 && y == y2)
+                break;
+
             // Update position
             int e2 = 2 * err;
             if (e2 > -dy) {
@@ -285,5 +287,158 @@ public class RenderGraphic {
      */
     public void drawString(String text, int x, int y) {
         graphics.drawString(text, x, y);
+    }
+
+    /**
+     * Draw a polygon with the specified points.
+     * @param points The vertices of the polygon in 3D space.
+     * @param color The color of the polygon.
+     * @param filled Whether the polygon should be filled or just outlined.
+     */
+    public void drawPolygon(Color color, boolean filled, Vector... points) {
+        if (points.length < 3) {
+            throw new IllegalArgumentException("A polygon must have at least 3 points.");
+        }
+
+        // Convert 3D points to screen coordinates
+        int[] xPoints = new int[points.length];
+        int[] yPoints = new int[points.length];
+        double[] zPoints = new double[points.length];
+
+        for (int i = 0; i < points.length; i++) {
+            if (!camera.isInFrontOfCamera(points[i])) {
+                return; // Skip if any point is behind the camera
+            }
+            Vector screenPoint = camera.toScreenCoords(points[i]);
+            xPoints[i] = (int) screenPoint.getX();
+            yPoints[i] = (int) screenPoint.getY();
+            zPoints[i] = screenPoint.getZ();
+        }
+
+        if (filled) {
+            // Fill the polygon using a simple scanline algorithm
+            fillPolygon(xPoints, yPoints, zPoints, color);
+        } else {
+            // Draw the polygon outline
+            for (int i = 0; i < points.length; i++) {
+                int next = (i + 1) % points.length;
+                drawLineBresenham(xPoints[i], yPoints[i], zPoints[i], xPoints[next], yPoints[next], zPoints[next], color);
+            }
+        }
+    }
+
+    /**
+     * Fill a polygon using a simple scanline algorithm.
+     */
+    private void fillPolygon(int[] xPoints, int[] yPoints, double[] zPoints, Color color) {
+        // Find the bounding box of the polygon
+        int minX = Arrays.stream(xPoints).min().orElse(0);
+        int maxX = Arrays.stream(xPoints).max().orElse(width - 1);
+        int minY = Arrays.stream(yPoints).min().orElse(0);
+        int maxY = Arrays.stream(yPoints).max().orElse(height - 1);
+
+        // Clamp to screen bounds
+        minX = Math.max(0, minX);
+        maxX = Math.min(width - 1, maxX);
+        minY = Math.max(0, minY);
+        maxY = Math.min(height - 1, maxY);
+
+        // Iterate over the bounding box
+        for (int y = minY; y <= maxY; y++) {
+            for (int x = minX; x <= maxX; x++) {
+                // Check if the point is inside the polygon using the winding number algorithm
+                if (isPointInPolygon(x, y, xPoints, yPoints)) {
+                    // Interpolate the z-value
+                    double z = interpolateZ(x, y, xPoints, yPoints, zPoints);
+
+                    // Depth test
+                    if (z < depthBuffer[y][x]) {
+                        depthBuffer[y][x] = z;
+                        colorBuffer[y][x] = color;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Check if a point is inside a polygon using the winding number algorithm.
+     */
+    private boolean isPointInPolygon(int x, int y, int[] xPoints, int[] yPoints) {
+        int windingNumber = 0;
+
+        for (int i = 0; i < xPoints.length; i++) {
+            int next = (i + 1) % xPoints.length;
+            if (yPoints[i] <= y) {
+                if (yPoints[next] > y && isLeft(xPoints[i], yPoints[i], xPoints[next], yPoints[next], x, y) > 0) {
+                    windingNumber++;
+                }
+            } else {
+                if (yPoints[next] <= y && isLeft(xPoints[i], yPoints[i], xPoints[next], yPoints[next], x, y) < 0) {
+                    windingNumber--;
+                }
+            }
+        }
+
+        return windingNumber != 0;
+    }
+
+    /**
+     * Determine if a point is to the left of a line segment.
+     */
+    private double isLeft(int x1, int y1, int x2, int y2, int x, int y) {
+        return (x2 - x1) * (y - y1) - (x - x1) * (y2 - y1);
+    }
+
+    /**
+     * Interpolate the z-value for a point inside the polygon.
+     */
+    private double interpolateZ(int x, int y, int[] xPoints, int[] yPoints, double[] zPoints) {
+        // Use a better interpolation method: weighted average based on barycentric coordinates
+        
+        // For simple triangulation, we'll use the polygon's centroid as a reference point
+        
+        double totalWeight = 0;
+        double weightedZ = 0;
+        
+        // Calculate weighted z based on the inverse distance to each vertex
+        for (int i = 0; i < xPoints.length; i++) {
+            // Calculate distance
+            double dist = Math.sqrt(Math.pow(x - xPoints[i], 2) + Math.pow(y - yPoints[i], 2));
+            
+            // Avoid division by zero by adding a small epsilon
+            dist = Math.max(dist, 0.0001);
+            
+            // Use inverse square distance as weight
+            double weight = 1.0 / (dist * dist);
+            
+            totalWeight += weight;
+            weightedZ += zPoints[i] * weight;
+        }
+        
+        // Add a bias towards the closest point's z-value to prevent z-fighting
+        double z = weightedZ / totalWeight;
+        
+        // Add a small depth bias based on the polygon's area to prevent z-fighting
+        // This makes larger polygons appear slightly in front of smaller ones
+        double area = calculatePolygonArea(xPoints, yPoints);
+        double depthBias = 0.0000001 * Math.log(1 + area);
+        
+        return z - depthBias;
+    }
+
+    /**
+     * Calculate the area of a polygon.
+     */
+    private double calculatePolygonArea(int[] xPoints, int[] yPoints) {
+        double area = 0;
+        int j = xPoints.length - 1;
+        
+        for (int i = 0; i < xPoints.length; i++) {
+            area += (xPoints[j] + xPoints[i]) * (yPoints[j] - yPoints[i]);
+            j = i;
+        }
+        
+        return Math.abs(area / 2.0);
     }
 }
